@@ -2047,7 +2047,7 @@ export default function ProductShopPage() {
 
       <section className="relative overflow-hidden bg-[#111]">
 
-        <div className="relative h-[118px] sm:h-[150px] lg:h-[190px]">
+        <div className="relative w-full h-auto bg-[#111]">
 
           {heroBanners.map(
             (
@@ -2071,11 +2071,11 @@ export default function ProductShopPage() {
                     : "lazy"
                 }
                 decoding="async"
-                className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ${
+                className={`block w-full h-auto transition-opacity duration-500 ${
                   index ===
                   activeBanner
-                    ? "opacity-100"
-                    : "opacity-0"
+                    ? "relative opacity-100"
+                    : "absolute inset-0 opacity-0"
                 }`}
               />
             ),
