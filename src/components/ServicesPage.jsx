@@ -5,7 +5,7 @@ const serviceCards = [
     title: "Lead Team",
     description:
       "Our experienced leadership team coordinates design, sourcing, production, and fulfilment through one connected system. This ensures better visibility, faster decisions, and dependable execution from order planning to final delivery.",
-    image: "/optimized/Service%20images/lead-team.jpg",
+    image: "/optimized/Service%20images/lead-team.jpg?v=581c504d3770",
   },
   {
     title: "Competitive Pricing",
@@ -29,13 +29,13 @@ const serviceCards = [
     title: "Latest Fashion",
     description:
       "We stay connected to evolving market movements, silhouettes, materials, and seasonal preferences. This helps us develop collections that are both trend-aware and commercially suitable for global and domestic markets.",
-    image: "/optimized/Service%20images/latest-fashion.jpg",
+    image: "/optimized/Service%20images/latest-fashion.jpg?v=307cd437baf3",
   },
   {
     title: "Risk Management",
     description:
       "We aim to reduce uncertainty through structured planning, communication, and operational control. By aligning sourcing, production, and timelines carefully, we help projects move forward with greater confidence.",
-    image: "/optimized/Service%20images/risk-management.jpg",
+    image: "/optimized/Service%20images/risk-management.jpg?v=f4076a00c02f",
   },
 ];
 
@@ -49,10 +49,10 @@ const highlightPoints = [
 ];
 
 const showcaseImages = [
-  "/optimized/Service%20images/latest-fashion.jpg",
+  "/optimized/Service%20images/latest-fashion.jpg?v=307cd437baf3",
   "/optimized/Service%20images/quality-assurance.jpg",
   "/optimized/Service%20images/competitive-pricing.jpg",
-  "/optimized/Service%20images/risk-management.jpg",
+  "/optimized/Service%20images/risk-management.jpg?v=f4076a00c02f",
 ];
 
 function ServicesPage() {
@@ -111,7 +111,7 @@ function ServicesPage() {
 
             <div className="overflow-hidden rounded-[2rem] border border-[#e6e1db] bg-white shadow-[0_24px_70px_rgba(17,17,17,0.08)]">
               <img
-                src="/optimized/Service%20images/services-hero.jpg"
+                src="/optimized/Service%20images/services-hero.jpg?v=e4d67b2c4917"
                 alt="ZEAL services overview"
                 className="h-[280px] w-full object-cover sm:h-[360px] lg:h-[520px]"
                 loading="eager"
