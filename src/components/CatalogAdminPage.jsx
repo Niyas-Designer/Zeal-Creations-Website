@@ -6,14 +6,14 @@ import {
 } from "react";
 
 import {
-  DEFAULT_BRANDS,
   deleteProductImages,
   deleteStoragePath,
   loadCatalogue,
-  saveBrands,
+  updateCatalogueMaster,
   saveCatalogue,
   uploadProductImage,
 } from "../services/catalogStorage";
+import { EMPTY_MASTERS, MASTER_GROUPS, productMasterValue } from "../services/catalogMasters.js";
 
 const MAX_IMAGE_DIMENSION = 1200;
 const IMAGE_QUALITY = 0.78;
@@ -25,69 +25,6 @@ const ANALYZE_ENDPOINT =
     ?.trim() ||
   "/api/catalog-analyze";
 
-const fixedCategories = [
-  { value: "men", label: "Men" },
-  { value: "women", label: "Women" },
-  { value: "boys", label: "Boys" },
-  { value: "girls", label: "Girls" },
-  { value: "infants", label: "Infants" },
-];
-
-const fixedCollections = [
-  {
-    value: "t-shirts",
-    label: "T-Shirts",
-  },
-  {
-    value: "polo-t-shirts",
-    label: "Polo T-Shirts",
-  },
-  {
-    value: "shirts",
-    label: "Shirts",
-  },
-  {
-    value: "hoodies",
-    label: "Hoodies",
-  },
-  {
-    value: "sweatshirts",
-    label: "Sweatshirts",
-  },
-  {
-    value: "track-pants",
-    label: "Track Pants",
-  },
-  {
-    value: "joggers",
-    label: "Joggers",
-  },
-  {
-    value: "shorts",
-    label: "Shorts",
-  },
-  {
-    value: "co-ord-sets",
-    label: "Co-ord Sets",
-  },
-  {
-    value: "dresses-tops",
-    label: "Dresses & Tops",
-  },
-  {
-    value: "kids-sets",
-    label: "Kids Sets",
-  },
-  {
-    value: "infant-sets",
-    label: "Infant Sets",
-  },
-  {
-    value: "special-wash-styles",
-    label: "Special Wash Styles",
-  },
-];
-
 const initialForm = {
   id: "",
   styleCode: "",
@@ -95,6 +32,8 @@ const initialForm = {
   brand: "",
   category: "",
   collection: "",
+  productType: "",
+  wearStyle: "",
   description: "",
   trending: false,
   published: true,
@@ -251,16 +190,18 @@ function buildFallbackName({
   category,
   collection,
   styleCode,
+  categoryOptions,
+  typeOptions,
 }) {
   const parts = [
     brand,
     getOptionLabel(
       category,
-      fixedCategories,
+      categoryOptions,
     ),
     getOptionLabel(
       collection,
-      fixedCollections,
+      typeOptions,
     ),
   ].filter(Boolean);
 
@@ -274,17 +215,19 @@ function buildFallbackDescription({
   brand,
   category,
   collection,
+  categoryOptions,
+  typeOptions,
 }) {
   const categoryLabel =
     getOptionLabel(
       category,
-      fixedCategories,
+      categoryOptions,
     );
 
   const collectionLabel =
     getOptionLabel(
       collection,
-      fixedCollections,
+      typeOptions,
     );
 
   const brandText =
@@ -594,6 +537,8 @@ async function compressImage(
 async function analyzeProductImages({
   images,
   brands,
+  categoryOptions,
+  typeOptions,
 }) {
   const response =
     await fetch(
@@ -630,10 +575,10 @@ async function analyzeProductImages({
               brands,
 
             allowedCategories:
-              fixedCategories,
+              categoryOptions,
 
             allowedCollections:
-              fixedCollections,
+              typeOptions,
           }),
       },
     );
@@ -704,12 +649,14 @@ function CatalogAdminPage() {
     setProducts,
   ] = useState([]);
 
-  const [
-    brands,
-    setBrands,
-  ] = useState(
-    DEFAULT_BRANDS,
-  );
+  const [masters, setMasters] = useState(EMPTY_MASTERS);
+  const brands = useMemo(() => masters.brands.map((option) => option.value), [masters]);
+  const categoryOptions = masters.categories;
+  const typeOptions = masters.productTypes;
+  const [managedGroup, setManagedGroup] = useState("");
+  const [masterName, setMasterName] = useState("");
+  const [editingMaster, setEditingMaster] = useState(null);
+  const [masterSaving, setMasterSaving] = useState(false);
 
   const [
     form,
@@ -727,26 +674,6 @@ function CatalogAdminPage() {
     search,
     setSearch,
   ] = useState("");
-
-  const [
-    newBrandName,
-    setNewBrandName,
-  ] = useState("");
-
-  const [
-    showBrandManager,
-    setShowBrandManager,
-  ] = useState(false);
-
-  const [
-    showCategories,
-    setShowCategories,
-  ] = useState(false);
-
-  const [
-    showCollections,
-    setShowCollections,
-  ] = useState(false);
 
   const [
     isLoading,
@@ -807,9 +734,7 @@ function CatalogAdminPage() {
           data.products,
         );
 
-        setBrands(
-          data.brands,
-        );
+        setMasters(data.masters);
 
         setStatus(
           "Firebase Storage connected",
@@ -931,9 +856,7 @@ function CatalogAdminPage() {
           data.products,
         );
 
-        setBrands(
-          data.brands,
-        );
+        setMasters(data.masters);
 
         setStatus(
           "Firebase Storage connected",
@@ -1005,16 +928,16 @@ function CatalogAdminPage() {
           const category =
             normalizeChoice(
               analysis?.category,
-              fixedCategories,
+              categoryOptions,
             ) ||
             current.category;
 
           const collection =
             normalizeChoice(
               analysis?.collection,
-              fixedCollections,
+              typeOptions,
             ) ||
-            current.collection;
+            current.productType;
 
           return {
             ...current,
@@ -1023,7 +946,7 @@ function CatalogAdminPage() {
 
             category,
 
-            collection,
+            productType: collection,
 
             productName:
               String(
@@ -1036,6 +959,8 @@ function CatalogAdminPage() {
                 category,
                 collection,
                 styleCode,
+                categoryOptions,
+                typeOptions,
               }),
 
             description:
@@ -1048,6 +973,8 @@ function CatalogAdminPage() {
                 brand,
                 category,
                 collection,
+                categoryOptions,
+                typeOptions,
               }),
           };
         },
@@ -1231,6 +1158,8 @@ function CatalogAdminPage() {
                 prepared,
 
               brands,
+              categoryOptions,
+              typeOptions,
             });
 
           applyAnalysis(
@@ -1508,69 +1437,38 @@ function CatalogAdminPage() {
       }
     };
 
-  const addBrand =
-    async () => {
-      const brand =
-        newBrandName
-          .trim();
-
-      if (!brand) {
-        return;
-      }
-
-      const exists =
-        brands.some(
-          (item) =>
-            item.toLowerCase() ===
-            brand.toLowerCase(),
-        );
-
-      if (exists) {
-        alert(
-          "This brand already exists.",
-        );
-
-        return;
-      }
-
-      try {
-        const saved =
-          await saveBrands([
-            ...brands,
-            brand,
-          ]);
-
-        setBrands(
-          saved,
-        );
-
-        setNewBrandName(
-          "",
-        );
-
-        setForm(
-          (current) => ({
-            ...current,
-            brand,
-          }),
-        );
-      } catch (error) {
-        console.error(
-          error,
-        );
-
-        setErrorMessage(
-          error?.message ||
-            "Unable to save brand.",
-        );
-      }
-    };
+  const manageMaster = async (action, option) => {
+    if (masterSaving || isLoading || isSaving) return;
+    const group = MASTER_GROUPS.find(({ key }) => key === managedGroup);
+    if (!group) return;
+    if (action === "delete" && !window.confirm(`Delete ${group.singular} "${option.label}"? This cannot be undone.`)) return;
+    setMasterSaving(true);
+    setErrorMessage("");
+    try {
+      const data = await updateCatalogueMaster({
+        key: managedGroup,
+        action,
+        value: option?.value ?? editingMaster?.value,
+        label: masterName,
+      });
+      setMasters(data.masters);
+      setProducts(data.products);
+      setMasterName("");
+      setEditingMaster(null);
+      setStatus(`${group.singular} ${action === "delete" ? "deleted" : "saved"}`);
+    } catch (error) {
+      setErrorMessage(error?.message || "Unable to update catalogue master.");
+    } finally {
+      setMasterSaving(false);
+    }
+  };
 
   const handleSubmit =
     async (
       event,
     ) => {
       event.preventDefault();
+      if (isLoading || isSaving || masterSaving) return;
 
       if (
         !form.images.length
@@ -1623,6 +1521,15 @@ function CatalogAdminPage() {
           "Please select Collection.",
         );
 
+        return;
+      }
+
+      if (!form.productType || !form.wearStyle) {
+        alert("Please select Product Type and Wear Style.");
+        return;
+      }
+      if (MASTER_GROUPS.some(({ key, field }) => !masters[key].some((option) => option.value === form[field]))) {
+        alert("Select current catalogue master options before saving.");
         return;
       }
 
@@ -1733,6 +1640,7 @@ function CatalogAdminPage() {
           );
 
         const productData = {
+          ...oldProduct,
           id:
             productId,
 
@@ -1753,7 +1661,10 @@ function CatalogAdminPage() {
             form.collection,
 
           productType:
-            form.collection,
+            form.productType,
+
+          wearStyle:
+            form.wearStyle,
 
           description:
             form.description
@@ -1889,6 +1800,7 @@ function CatalogAdminPage() {
       setForm({
         ...initialForm,
         ...product,
+        ...Object.fromEntries(MASTER_GROUPS.map(({ key, field }) => [field, productMasterValue(product, key, masters)])),
 
         images:
           product.images || [],
@@ -2142,7 +2054,7 @@ function CatalogAdminPage() {
               disabled={
                 isLoading
               }
-              className="border border-[#171717] px-4 py-2 text-xs font-medium disabled:opacity-40"
+              className="zeal-button border border-[#171717] px-4 py-2 text-xs font-medium disabled:opacity-40"
             >
               Refresh Storage
             </button>
@@ -2161,130 +2073,53 @@ function CatalogAdminPage() {
         </div>
 
 
-        <div className="mb-6 grid gap-4 lg:grid-cols-3">
-
-          <ManagerCard
-            title="Brands"
-            value={`${brands.length} brands`}
-            onClick={() =>
-              setShowBrandManager(
-                (current) =>
-                  !current,
-              )
-            }
-          />
-
-          <ManagerCard
-            title="Categories"
-            value="Men • Women • Boys • Girls • Infants"
-            onClick={() =>
-              setShowCategories(
-                (current) =>
-                  !current,
-              )
-            }
-          />
-
-          <ManagerCard
-            title="Collections"
-            value={`${fixedCollections.length} collections`}
-            onClick={() =>
-              setShowCollections(
-                (current) =>
-                  !current,
-              )
-            }
-          />
-
+        <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+          {MASTER_GROUPS.map((group) => (
+            <ManagerCard
+              key={group.key}
+              title={group.title}
+              value={`${masters[group.key].length} values`}
+              disabled={isLoading || isSaving || masterSaving}
+              onClick={() => {
+                setManagedGroup((current) => current === group.key ? "" : group.key);
+                setMasterName("");
+                setEditingMaster(null);
+              }}
+            />
+          ))}
         </div>
 
-
-        {showBrandManager && (
-
-          <section className="mb-6 rounded-2xl bg-white p-6 shadow-sm">
-
-            <h2 className="text-xl font-semibold">
-              Brands
-            </h2>
-
-            <div className="mt-5 flex flex-col gap-3 sm:flex-row">
-
+        {managedGroup && (
+          <section className="mb-6 rounded-2xl bg-white p-6 shadow-sm" aria-busy={masterSaving}>
+            <h2 className="text-xl font-semibold">{MASTER_GROUPS.find((group) => group.key === managedGroup)?.title}</h2>
+            <p className="mt-2 text-xs text-[#777]">Renaming updates the label while keeping existing product references. Values in use cannot be deleted.</p>
+            <form className="mt-5 flex flex-col gap-3 sm:flex-row" onSubmit={(event) => { event.preventDefault(); void manageMaster(editingMaster ? "rename" : "create"); }}>
               <input
-                value={
-                  newBrandName
-                }
-                onChange={(
-                  event,
-                ) =>
-                  setNewBrandName(
-                    event.target
-                      .value,
-                  )
-                }
-                placeholder="New brand name"
+                value={masterName}
+                onChange={(event) => setMasterName(event.target.value)}
+                placeholder={editingMaster ? "Edit value name" : "Add new value"}
+                aria-label={editingMaster ? "Edit value name" : "Add new value"}
+                required
+                disabled={masterSaving}
                 className="catalog-input flex-1"
               />
-
-              <button
-                type="button"
-                onClick={
-                  addBrand
-                }
-                className="bg-[#171717] px-6 py-3 text-xs font-semibold uppercase text-white"
-              >
-                Add Brand
+              <button type="submit" disabled={masterSaving || !masterName.trim()} className="zeal-button bg-[#171717] px-6 py-3 text-xs font-semibold uppercase text-white disabled:opacity-40">
+                {masterSaving ? "Saving..." : editingMaster ? "Save Changes" : "Add new value"}
               </button>
-
-            </div>
-
-
+              {editingMaster && <button type="button" disabled={masterSaving} onClick={() => { setEditingMaster(null); setMasterName(""); }} className="zeal-button border border-[#171717] px-4 py-3 text-xs">Cancel</button>}
+            </form>
             <div className="mt-5 flex flex-wrap gap-2">
-
-              {brands.map(
-                (brand) => (
-
-                  <span
-                    key={
-                      brand
-                    }
-                    className="border border-[#d8d3cd] bg-[#faf9f7] px-4 py-3 text-sm"
-                  >
-                    {brand}
-                  </span>
-
-                ),
-              )}
-
+              {masters[managedGroup].map((option) => (
+                <div key={option.value} className="flex items-center gap-3 border border-[#d8d3cd] bg-[#faf9f7] px-4 py-3 text-sm">
+                  <span>{option.label}</span>
+                  <button type="button" disabled={masterSaving} onClick={() => { setEditingMaster(option); setMasterName(option.label); }} className="zeal-text-button text-xs underline disabled:opacity-40" aria-label={`Edit ${option.label}`}>Edit</button>
+                  <button type="button" disabled={masterSaving} onClick={() => void manageMaster("delete", option)} className="zeal-text-button text-xs text-[#a52b1f] underline disabled:opacity-40" aria-label={`Delete ${option.label}`}>Delete</button>
+                </div>
+              ))}
+              {!masters[managedGroup].length && <p className="text-sm text-[#777]">No values yet. Add a new value above.</p>}
             </div>
-
           </section>
-
         )}
-
-
-        {showCategories && (
-
-          <OptionPanel
-            title="Available Categories"
-            options={
-              fixedCategories
-            }
-          />
-
-        )}
-
-
-        {showCollections && (
-
-          <OptionPanel
-            title="Available Collections"
-            options={
-              fixedCollections
-            }
-          />
-
-        )}
-
 
         <form
           onSubmit={
@@ -2376,7 +2211,7 @@ function CatalogAdminPage() {
                   isUploading ||
                   isSaving
                 }
-                className="flex flex-col items-center disabled:cursor-not-allowed disabled:opacity-50"
+                className="zeal-text-button flex flex-col items-center disabled:cursor-not-allowed disabled:opacity-50"
               >
 
                 <span className="flex h-14 w-14 items-center justify-center rounded-full bg-[#171717] text-2xl text-white">
@@ -2470,7 +2305,7 @@ function CatalogAdminPage() {
                                 image.id,
                               )
                             }
-                            className="mt-2 w-full border px-2 py-2 text-[9px] font-semibold uppercase"
+                            className="zeal-button mt-2 w-full border px-2 py-2 text-[9px] font-semibold uppercase"
                           >
                             Set Cover
                           </button>
@@ -2491,7 +2326,7 @@ function CatalogAdminPage() {
                                 -1,
                               )
                             }
-                            className="border p-2 text-xs disabled:opacity-20"
+                            className="zeal-text-button border p-2 text-xs disabled:opacity-20"
                           >
                             ←
                           </button>
@@ -2510,7 +2345,7 @@ function CatalogAdminPage() {
                                 1,
                               )
                             }
-                            className="border p-2 text-xs disabled:opacity-20"
+                            className="zeal-text-button border p-2 text-xs disabled:opacity-20"
                           >
                             →
                           </button>
@@ -2525,7 +2360,7 @@ function CatalogAdminPage() {
                               image.id,
                             )
                           }
-                          className="mt-2 w-full border border-red-300 px-2 py-2 text-[9px] font-semibold uppercase text-red-600"
+                          className="zeal-button mt-2 w-full border border-red-300 px-2 py-2 text-[9px] font-semibold uppercase text-red-600"
                         >
                           Remove
                         </button>
@@ -2584,121 +2419,16 @@ function CatalogAdminPage() {
               </Field>
 
 
-              <Field
-                label="Brand"
-              >
-                <select
-                  name="brand"
-                  value={
-                    form.brand
-                  }
-                  onChange={
-                    handleChange
-                  }
-                  className="catalog-input"
-                >
-
-                  <option value="">
-                    Select Brand
-                  </option>
-
-                  {brands.map(
-                    (brand) => (
-
-                      <option
-                        key={
-                          brand
-                        }
-                        value={
-                          brand
-                        }
-                      >
-                        {brand}
-                      </option>
-
-                    ),
-                  )}
-
-                </select>
-              </Field>
-
-
-              <Field
-                label="Category"
-              >
-                <select
-                  name="category"
-                  value={
-                    form.category
-                  }
-                  onChange={
-                    handleChange
-                  }
-                  className="catalog-input"
-                >
-
-                  <option value="">
-                    Select Category
-                  </option>
-
-                  {fixedCategories.map(
-                    (item) => (
-
-                      <option
-                        key={
-                          item.value
-                        }
-                        value={
-                          item.value
-                        }
-                      >
-                        {item.label}
-                      </option>
-
-                    ),
-                  )}
-
-                </select>
-              </Field>
-
-
-              <Field
-                label="Collection"
-              >
-                <select
-                  name="collection"
-                  value={
-                    form.collection
-                  }
-                  onChange={
-                    handleChange
-                  }
-                  className="catalog-input"
-                >
-
-                  <option value="">
-                    Select Collection
-                  </option>
-
-                  {fixedCollections.map(
-                    (item) => (
-
-                      <option
-                        key={
-                          item.value
-                        }
-                        value={
-                          item.value
-                        }
-                      >
-                        {item.label}
-                      </option>
-
-                    ),
-                  )}
-
-                </select>
-              </Field>
+              {MASTER_GROUPS.map(({ key, field, singular }) => (
+                <Field key={key} label={singular}>
+                  <select name={field} value={form[field] || ""} onChange={handleChange} className="catalog-input">
+                    <option value="">Select {singular}</option>
+                    {masters[key].map((option) => (
+                      <option key={option.value} value={option.value}>{option.label}</option>
+                    ))}
+                  </select>
+                </Field>
+              ))}
 
             </div>
 
@@ -2767,10 +2497,12 @@ function CatalogAdminPage() {
               type="submit"
               disabled={
                 isSaving ||
+                masterSaving ||
+                isLoading ||
                 isUploading ||
                 isAnalyzing
               }
-              className="bg-[#171717] px-8 py-4 text-xs font-semibold uppercase text-white disabled:cursor-not-allowed disabled:opacity-40"
+              className="zeal-button bg-[#171717] px-8 py-4 text-xs font-semibold uppercase text-white disabled:cursor-not-allowed disabled:opacity-40"
             >
 
               {isSaving
@@ -2790,7 +2522,7 @@ function CatalogAdminPage() {
               disabled={
                 isSaving
               }
-              className="border border-[#171717] px-8 py-4 text-xs font-semibold uppercase disabled:opacity-40"
+              className="zeal-button border border-[#171717] px-8 py-4 text-xs font-semibold uppercase disabled:opacity-40"
             >
               Clear
             </button>
@@ -2955,7 +2687,7 @@ function CatalogAdminPage() {
                               -1,
                             )
                           }
-                          className="border px-4 py-3 text-xs disabled:opacity-20"
+                          className="zeal-button border px-4 py-3 text-xs disabled:opacity-20"
                         >
                           ↑
                         </button>
@@ -2974,7 +2706,7 @@ function CatalogAdminPage() {
                               1,
                             )
                           }
-                          className="border px-4 py-3 text-xs disabled:opacity-20"
+                          className="zeal-button border px-4 py-3 text-xs disabled:opacity-20"
                         >
                           ↓
                         </button>
@@ -2987,7 +2719,7 @@ function CatalogAdminPage() {
                               product,
                             )
                           }
-                          className="border px-4 py-3 text-[10px] font-semibold uppercase"
+                          className="zeal-button border px-4 py-3 text-[10px] font-semibold uppercase"
                         >
                           Edit
                         </button>
@@ -3006,7 +2738,7 @@ function CatalogAdminPage() {
                               }),
                             )
                           }
-                          className="border px-4 py-3 text-[10px] font-semibold uppercase"
+                          className="zeal-button border px-4 py-3 text-[10px] font-semibold uppercase"
                         >
 
                           {product.trending
@@ -3029,7 +2761,7 @@ function CatalogAdminPage() {
                               }),
                             )
                           }
-                          className="border px-4 py-3 text-[10px] font-semibold uppercase"
+                          className="zeal-button border px-4 py-3 text-[10px] font-semibold uppercase"
                         >
 
                           {product.published
@@ -3046,7 +2778,7 @@ function CatalogAdminPage() {
                               product,
                             )
                           }
-                          className="border border-red-500 px-4 py-3 text-[10px] font-semibold uppercase text-red-600"
+                          className="zeal-button border border-red-500 px-4 py-3 text-[10px] font-semibold uppercase text-red-600"
                         >
                           Delete
                         </button>
@@ -3105,6 +2837,7 @@ function ManagerCard({
   title,
   value,
   onClick,
+  disabled,
 }) {
   return (
     <div className="flex min-h-[140px] flex-col justify-between rounded-2xl bg-white p-5 shadow-sm">
@@ -3121,49 +2854,16 @@ function ManagerCard({
 
       <button
         type="button"
+        disabled={disabled}
         onClick={
           onClick
         }
-        className="mt-5 self-start border border-[#171717] px-4 py-3 text-[10px] font-semibold uppercase"
+        className="zeal-button mt-5 self-start border border-[#171717] px-4 py-3 text-[10px] font-semibold uppercase"
       >
         Manage
       </button>
 
     </div>
-  );
-}
-
-function OptionPanel({
-  title,
-  options,
-}) {
-  return (
-    <section className="mb-6 rounded-2xl bg-white p-6 shadow-sm">
-
-      <h2 className="text-xl font-semibold">
-        {title}
-      </h2>
-
-      <div className="mt-5 flex flex-wrap gap-2">
-
-        {options.map(
-          (option) => (
-
-            <span
-              key={
-                option.value
-              }
-              className="border border-[#d8d3cd] bg-[#faf9f7] px-4 py-3 text-sm"
-            >
-              {option.label}
-            </span>
-
-          ),
-        )}
-
-      </div>
-
-    </section>
   );
 }
 

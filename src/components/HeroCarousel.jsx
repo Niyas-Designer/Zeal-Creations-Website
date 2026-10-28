@@ -122,7 +122,7 @@ function HeroCarousel() {
             type="button"
             aria-label="Previous slide"
             onClick={() => changeSlide(-1)}
-            className="flex h-11 w-11 items-center justify-center bg-[#ff0c00] text-lg text-white transition-colors duration-200 hover:bg-[#46372e]"
+            className="zeal-control flex h-11 w-11 items-center justify-center bg-[#ff0c00] text-lg text-white transition-colors duration-200 hover:bg-[#46372e]"
           >
             <span aria-hidden="true">&larr;</span>
           </button>
@@ -131,7 +131,7 @@ function HeroCarousel() {
             type="button"
             aria-label="Next slide"
             onClick={() => changeSlide(1)}
-            className="flex h-11 w-11 items-center justify-center bg-[#ff0c00] text-lg text-white transition-colors duration-200 hover:bg-[#46372e]"
+            className="zeal-control flex h-11 w-11 items-center justify-center bg-[#ff0c00] text-lg text-white transition-colors duration-200 hover:bg-[#46372e]"
           >
             <span aria-hidden="true">&rarr;</span>
           </button>

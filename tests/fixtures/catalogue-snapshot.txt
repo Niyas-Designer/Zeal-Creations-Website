@@ -1,0 +1,176 @@
+# Snapshot of the live catalogue (brand|category|stored type|product name). Read-only test data; no ids or images.
+Codez|boys|kids-sets|Boys Navy Colourblock Hoodie and Jogger Set
+Codez|boys|hoodies|Boys Navy Graphic Pullover Hoodie
+Bag Mafia & Wedding Cake|men|special-wash-styles|Acid Wash Graphic Oversized T-Shirt
+Bag Mafia & Wedding Cake|men|special-wash-styles|Men's Acid-Wash Graphic T-Shirt
+Bag Mafia & Wedding Cake|men|special-wash-styles|Men's Acid-Wash Raw-Seam Jeans
+Bag Mafia & Wedding Cake|men|t-shirts|Graphic Sleeveless T-Shirt
+Bag Mafia & Wedding Cake|men|special-wash-styles|Men's Acid-Wash Panelled Jeans
+Bag Mafia & Wedding Cake|men|t-shirts|Men's Acid Wash Graphic Oversized T-Shirt
+Bag Mafia & Wedding Cake|men|special-wash-styles|Men's Acid Wash Graphic T-Shirt
+Bag Mafia & Wedding Cake|men|special-wash-styles|Acid Wash Graphic T-Shirt
+Bag Mafia & Wedding Cake|men|special-wash-styles|Men's Acid Wash Graphic T-Shirt
+Bag Mafia & Wedding Cake|men|special-wash-styles|Men's Acid Wash Graphic Oversized T-Shirt
+Ardeur|men|t-shirts|Men's Teal Outland Graphic T-Shirt
+Ardeur|men|t-shirts|Adventure Graphic Relaxed Fit T-Shirt
+Ardeur|men|t-shirts|Men's Teal North Bound Horizon Graphic T-Shirt
+Ardeur|men|t-shirts|Teal Graphic Print T-Shirt
+Ardeur|men|t-shirts|Men's White Chest-Print Crew Neck T-Shirt
+Ardeur|men|t-shirts|Men's White Timeless Studio Graphic T-Shirt
+Ardeur|men|t-shirts|Men's Light Blue Chest Graphic T-Shirt
+Ardeur|men|t-shirts|Men's Graphic Print Crew-Neck T-Shirt
+Ardeur|men|t-shirts|Men's Black Ramen Graphic T-Shirt
+Ardeur|men|t-shirts|Men's Black Ramen House Graphic T-Shirt
+Ardeur|men|t-shirts|Men's Burgundy Graphic Crew Neck T-Shirt
+Ardeur|men|t-shirts|Men's Maroon Japanese Landscape Graphic T-Shirt
+Ardeur|men|t-shirts|Men's Grounded Graphic Crew Neck T-Shirt
+Ardeur|men|t-shirts|Men's Teal Botanical Graphic T-Shirt
+Ardeur|men|t-shirts|Men's Navy Graphic Crew-Neck T-Shirt
+Ardeur|men|t-shirts|Men's Navy Sound & Stage Graphic T-Shirt
+Ardeur|men|t-shirts|Men's Coconut Heaven Graphic Crew Neck T-Shirt
+Ardeur|men|t-shirts|Men's Coconut Heaven Graphic T-Shirt
+Ardeur|men|t-shirts|Men's Mint Green Vintage Car Graphic T-Shirt
+Ardeur|men|t-shirts|Men's Mint Green Chest Logo T-Shirt
+Ardeur|men|t-shirts|Café Seoul Graphic T-Shirt
+Ardeur|men|t-shirts|Men's White Cafe Social Club Graphic T-Shirt
+Ardeur|men|t-shirts|Men's White Graphic Crew Neck T-Shirt
+Ardeur|men|t-shirts|Men's Camouflage System Graphic T-Shirt
+Ardeur|men|t-shirts|Men's Mountain Graphic Oversized T-Shirt
+Ardeur|men|t-shirts|Men's Mountain Quest Graphic T-Shirt
+Ardeur|men|t-shirts|Men's White Coast Flow Graphic Crew Neck T-Shirt
+Ardeur|men|t-shirts|Men's White Coast Flow Graphic T-Shirt
+Ardeur|men|t-shirts|Men's White Kaito's Garage Graphic Crew-Neck T-Shirt
+Ardeur|men|t-shirts|Men's White Kaito's Garage Graphic T-Shirt
+Ardeur|men|t-shirts|Men's Mint Green Graphic Crew Neck T-Shirt
+Ardeur|men|t-shirts|Mint Green Floral Graphic Oversized T-Shirt
+Ardeur|men|t-shirts|Men's White Graphic Crew-Neck T-Shirt
+Ardeur|men|t-shirts|Men's White Ocean Front Graphic T-Shirt
+Ardeur|men|t-shirts|Pink Chest-Print Crew Neck T-Shirt
+Ardeur|men|t-shirts|Botanical Theory Graphic Print T-Shirt
+Ardeur|men|t-shirts|White Graphic Print Crew-Neck T-Shirt
+Ardeur|men|t-shirts|Men's White Japanese Graphic T-Shirt
+Codez|boys|sweatshirts|Boys White Rock & Roll Graphic Sweatshirt
+Codez|girls|sweatshirts|Girls Pink Adventure Graphic Sweatshirt
+Codez|boys|sweatshirts|Boys Green Graphic Crew Neck Sweatshirt
+Codez|boys|sweatshirts|Boys Football Graphic Crew-Neck Sweatshirt
+Codez|boys|sweatshirts|Boys Blue Graphic Crew Neck Sweatshirt
+Codez|boys|sweatshirts|Boys' Robot Graphic Crew Neck Sweatshirt
+Codez|boys|sweatshirts|Boys Formula Car Graphic Sweatshirt
+Codez|boys|sweatshirts|Boys Olive Green Army Graphic Sweatshirt
+Codez|boys|sweatshirts|Boys Blue Anime Graphic Crew-Neck Sweatshirt
+Codez|boys|sweatshirts|Boys Navy Motocross Graphic Sweatshirt
+Codez|boys|sweatshirts|Boys Black Space Surfing Graphic Sweatshirt
+Codez|boys|kids-sets|Boys Red Basketball Graphic T-Shirt and Shorts Set
+Codez|boys|kids-sets|Boys Blue Graphic T-Shirt and Shorts Set
+Codez|boys|kids-sets|Boys Racing Graphic T-Shirt and Shorts Set
+Codez|boys|kids-sets|Boys Olive Racing Graphic T-Shirt and Shorts Set
+Codez|boys|kids-sets|Boys Mauve Athletic Graphic T-Shirt and Shorts Set
+Codez|boys|kids-sets|Boys Navy Athletic Graphic T-Shirt and Track Pants Set
+Codez|boys|kids-sets|Boys Black Graphic Polo and Shorts Set
+Codez|boys|kids-sets|Boys Maroon Colourblock Polo T-Shirt and Shorts Set
+Codez|boys|kids-sets|Boys Olive Colourblock Polo and Shorts Set
+Codez|boys|kids-sets|Boys Football Graphic Polo and Shorts Set
+Codez|boys|kids-sets|Boys Football Polo T-Shirt and Shorts Set
+Codez|boys|kids-sets|Boys Soccer Graphic Polo and Shorts Set
+Codez|boys|kids-sets|Boys Graphic T-Shirt and Shorts Set
+Codez|boys|kids-sets|Boys Burgundy Athletic Graphic T-Shirt and Shorts Set
+Codez|boys|t-shirts|Boys Grey Graphic Print Crew Neck T-Shirt
+Codez|boys|t-shirts|Boys Mint Green Graphic Print T-Shirt
+Codez|boys|kids-sets|Boys Light Blue New York T-Shirt and Shorts Set
+Codez|boys|kids-sets|Boys Cream New York T-Shirt and Shorts Set
+Codez|boys|kids-sets|Boys Teal Graphic T-Shirt and Shorts Set
+Codez|boys|kids-sets|Boys Orange Graphic T-Shirt and Shorts Set
+Codez|boys|kids-sets|Boys Navy Graphic T-Shirt and Shorts Set
+Codez|boys|kids-sets|Boys Grey Graphic T-Shirt and Shorts Set
+Codez|boys|co-ord-sets|Boys Green Slogan T-Shirt and Shorts Co-ord Set
+Codez|boys|kids-sets|Boys Break Limits Printed T-Shirt and Shorts Set
+Codez|boys|kids-sets|Boys Maroon Graphic T-Shirt and Shorts Set
+Codez|boys|co-ord-sets|Boys Superior Graphic T-Shirt and Shorts Co-ord Set
+Codez|boys|kids-sets|Boys Black Graphic T-Shirt and Shorts Set
+Codez|boys|kids-sets|Boys Blue Football Graphic T-Shirt and Shorts Set
+Codez|boys|t-shirts|Boys Baseball Graphic Crew Neck T-Shirt
+Codez|boys|t-shirts|Boys Grey Baseball Graphic T-Shirt
+Codez|boys|t-shirts|Boys Graphic Print Crew Neck T-Shirt
+Codez|boys|t-shirts|Boys White Graffiti Graphic T-Shirt
+Codez|boys|t-shirts|Boys Graphic Sleeve Print T-Shirt
+Codez|boys|t-shirts|Boys Black Graphic Sleeve Pocket T-Shirt
+Codez|boys|t-shirts|Boys Coffee Graphic Beige T-Shirt
+Codez|boys|t-shirts|Boys Coffee Slogan Printed T-Shirt
+Codez|boys|t-shirts|Boys Orange Graphic T-Shirt
+Codez|boys|t-shirts|Boys Lime Green Graphic T-Shirt
+Codez|boys|t-shirts|Boys Blue Chest-Print Crew-Neck T-Shirt
+Codez|boys|kids-sets|Boys Black Graphic T-Shirt and Shorts Set
+Codez|boys|kids-sets|Boys Navy Graphic T-Shirt and Shorts Set
+Codez|boys|kids-sets|Boys White Future Graphic T-Shirt and Shorts Set
+Codez|boys|kids-sets|Boys Light Blue Graphic T-Shirt and Shorts Set
+Codez|boys|kids-sets|Boys Grey Graphic T-Shirt and Shorts Set
+Codez|boys|kids-sets|Boys Teal Graphic T-Shirt and Shorts Set
+Codez|boys|kids-sets|Boys Mint Graphic T-Shirt and Shorts Set
+Codez|boys|kids-sets|Boys Black Graphic T-Shirt and Shorts Set
+Codez|boys|kids-sets|Boys Burgundy Graphic T-Shirt and Shorts Set
+Codez|boys|t-shirts|Boys Navy Football Graphic T-Shirt
+Codez|boys|t-shirts|Boys Beige Team Spirit Graphic T-Shirt
+Codez|boys|t-shirts|Boys Yellow Team Spirit Graphic T-Shirt
+Codez|boys|t-shirts|Boys Teal Football Graphic T-Shirt
+Codez|boys|polo-t-shirts|Boys Teal Graphic Polo T-Shirt
+Codez|boys|polo-t-shirts|Boys Peach Graphic Polo T-Shirt
+Fervoro|men|polo-t-shirts|Men's Colorblock Crest Graphic Polo T-Shirt
+Fervoro|men|polo-t-shirts|Charcoal Embroidered Polo T-Shirt
+Fervoro|men|polo-t-shirts|Fervoro Black Contrast Sleeve Polo T-Shirt
+Fervoro|men|polo-t-shirts|Men's Black Contrast-Trim Polo T-Shirt
+Fervoro|men|polo-t-shirts|Men's Green Rugby Graphic Polo T-Shirt
+Fervoro|men|polo-t-shirts|Navy Graphic Polo T-Shirt
+Fervoro|men|polo-t-shirts|Men's Blue Crest Polo T-Shirt
+Fervoro|men|polo-t-shirts|Men's Green Contrast Panel Polo T-Shirt
+Fervoro|men|polo-t-shirts|Men's Red Colourblock Crest Polo T-Shirt
+Fervoro|men|polo-t-shirts|Cream Diagonal Stripe Crest Polo T-Shirt
+Fervoro|men|polo-t-shirts|Men's Red and Navy Colourblock Polo T-Shirt
+Fervoro|men|polo-t-shirts|Men's Colourblock Polo T-Shirt
+Fervoro|men|polo-t-shirts|Men's Colourblock Embroidered Polo T-Shirt
+Fervoro|men|polo-t-shirts|Fervoro Mint Green Striped Sleeve Polo T-Shirt
+Fervoro|men|polo-t-shirts|Fervoro Coral Striped Sleeve Graphic Polo T-Shirt
+Fervoro|men|polo-t-shirts|Men's Red Colourblock Crest Polo T-Shirt
+Fervoro|men|polo-t-shirts|Mint Green Short-Sleeve Polo T-Shirt
+Fervoro|men|polo-t-shirts|Fervoro Red Graphic Polo T-Shirt
+Fervoro|men|polo-t-shirts|Men's Black Contrast-Placket Embroidered Polo T-Shirt
+Fervoro|men|polo-t-shirts|Men's Black Contrast Panel Graphic Polo T-Shirt
+|women|co-ord-sets|Women's Solid T-Shirt and Wide-Leg Pants Co-ord Set
+|women|co-ord-sets|Pale Blue T-Shirt and Wide-Leg Pants Co-ord Set
+|women|co-ord-sets|Purple Oversized T-Shirt and Wide-Leg Pants Co-ord Set
+|women|co-ord-sets|White Relaxed-Fit T-Shirt and Wide-Leg Pants Co-ord Set
+|women|co-ord-sets|Women's Grey Long-Sleeve Jumpsuit
+|women|co-ord-sets|Dark Brown Long-Sleeve Top and Wide-Leg Pants Co-ord Set
+|women|co-ord-sets|White Crew-Neck Sweatshirt and Wide-Leg Pants Co-Ord Set
+|women|co-ord-sets|Women's Beige Ribbed Collared Co-ord Set
+|women|co-ord-sets|Women's Brown Ribbed Collared Co-ord Set
+|women|t-shirts|Women's Black Relaxed-Fit Logo T-Shirt
+|women|co-ord-sets|Burgundy Zip-Up Jacket and Wide-Leg Pants Co-ord Set
+HRX|women|co-ord-sets|Women's Pale Blue Relaxed-Fit T-Shirt and Wide-Leg Co-ord Set
+|women|co-ord-sets|Black Quarter-Zip Sweatshirt and Wide-Leg Pants Co-ord Set
+|women|co-ord-sets|Women's Solid Half-Zip Sweatshirt and Flared Pants Co-ord Set
+|women|co-ord-sets|Women's Navy Relaxed T-Shirt and Flared Pants Co-ord Set
+|women|co-ord-sets|Black Printed T-Shirt and Wide-Leg Pants Co-ord Set
+|women|co-ord-sets|Cream Oversized T-Shirt and Wide-Leg Co-Ord Set
+|women|co-ord-sets|Brown Oversized T-Shirt and Wide-Leg Pants Co-ord Set
+|women|co-ord-sets|Beige Relaxed-Fit Shirt and Wide-Leg Trouser Co-ord Set
+|women|co-ord-sets|Plum Oversized Shirt and Wide-Leg Pants Co-ord Set
+|women|co-ord-sets|Women's White V-Neck Co-ord Set
+|infants|infant-sets|Infant Blue Colourblock Hoodie and Jogger Set
+|infants|infant-sets|Burgundy Color-Block Hoodie and Jogger Set
+|infants|infant-sets|Infant Green Graphic Sweatshirt and Jogger Set
+|infants|infant-sets|Infant Teal Graphic Hoodie and Jogger Set
+|infants|infant-sets|Infant Brown Graphic Sweatshirt and Jogger Set
+|infants|sweatshirts|Infant Navy Graphic Crew-Neck Sweatshirt
+|infants|sweatshirts|Infant Light Blue Varsity Graphic Sweatshirt
+|infants|infant-sets|Infant Colour-Block Half-Zip Hoodie and Shorts Set
+|infants|sweatshirts|Infants Rugby Club 10 Colourblock Sweatshirt
+|infants|infant-sets|Infant Mint Green Colorblock Hoodie and Jogger Set
+|infants|infant-sets|Infant Navy Tennis Graphic Sweatshirt and Jogger Set
+|infants|infant-sets|Infant Colour-Block Graphic Hoodie and Shorts Set
+Revisited|men|co-ord-sets|Men's Grey Patch-Detail T-Shirt and Jogger Co-ord Set
+Revisited|men|co-ord-sets|Men's Red Printed T-Shirt and Cargo Jogger Co-ord Set
+Revisited|men|co-ord-sets|Men's Colourblock Graphic T-Shirt and Jogger Co-ord Set
+Revisited|men|co-ord-sets|Olive Graphic T-Shirt and Cargo Jogger Co-ord Set
+Revisited|men|t-shirts|Men's Black Limitless Graphic T-Shirt
+Revisited|men|co-ord-sets|Navy Graphic Cargo Jogger Co-ord Set
+Revisited|men|co-ord-sets|Teal Graphic T-Shirt and Cargo Jogger Co-ord Set

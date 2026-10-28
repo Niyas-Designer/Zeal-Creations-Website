@@ -1,75 +1,29 @@
 import {
+  Fragment,
   memo,
   useCallback,
+  useDeferredValue,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
 
 import { Link } from "react-router-dom";
 
 import {
-  DEFAULT_BRANDS,
+  getCachedCatalogue,
+  subscribeCatalogue,
   loadCatalogue,
 } from "../services/catalogStorage";
+import { EMPTY_MASTERS, productMasterValue } from "../services/catalogMasters.js";
+import { displayType, normalizeCategory, normalizeCategoryOptions, normalizeColor, productTypesOf, typeRank, typeSection } from "../utils/productFilters.js";
+
+const PAGE_SIZE = 24;
 
 /* =========================================================
    FILTER MASTER DATA
 ========================================================= */
-
-const defaultBrands = DEFAULT_BRANDS;
-
-const approvedCollections = [
-  "Winter",
-  "Autumn",
-  "Summer",
-  "Core",
-];
-
-const approvedProductTypes = [
-  "T-Shirt",
-  "Polo T-Shirt",
-  "Full Sleeve T-Shirt",
-  "Tank Top",
-  "Shirt",
-  "Hoodie",
-  "Zipper Hoodie",
-  "Sweatshirt",
-  "Jacket",
-  "Track Pant",
-  "Jogger",
-  "Trouser",
-  "Cargo Pant",
-  "Legging",
-  "Shorts",
-  "Skirt",
-  "Dress",
-  "Top",
-  "Co-ord Set",
-  "T-Shirt & Track Pant Set",
-  "Hoodie & Track Pant Set",
-  "Top & Bottom Set",
-  "2 Piece Set",
-  "3 Piece Set",
-  "Romper",
-  "Bodysuit",
-  "Sleepsuit",
-  "Dungaree",
-  "Infant Set",
-  "Baby Set",
-];
-
-const approvedCategories = [
-  "Men",
-  "Womens",
-  "Boys",
-  "Girls",
-  "Infant Boys",
-  "Infant Girls",
-  "Baby Boy",
-  "Baby Girl",
-  "Unisex",
-];
 
 const approvedColors = [
   {
@@ -105,29 +59,6 @@ const approvedColors = [
     hex: "#7a5137",
   },
 ];
-
-/* =========================================================
-   HERO BANNERS
-========================================================= */
-
-const heroBanners = Array.from(
-  {
-    length: 8,
-  },
-  (_, index) => ({
-    id: `banner-${index + 1}`,
-    file: `Banner ${index + 1}.jpg`,
-    alt: `ZEAL product banner ${index + 1}`,
-  }),
-);
-
-const bannerImagePath = (file) =>
-  `/optimized/Product%20banners/${encodeURIComponent(
-    file.replace(
-      /\.[^.]+$/,
-      ".jpg",
-    ),
-  )}`;
 
 /* =========================================================
    IMAGE HELPERS
@@ -183,662 +114,28 @@ function imageList(product) {
     .filter(Boolean);
 }
 
-/* =========================================================
-   PRODUCT NORMALISERS
-========================================================= */
+// One comparison rule for counts, options and filtering: trimmed, case-insensitive.
+const filterKey = (value) => String(value ?? "").trim().toLowerCase();
 
-function normalCategory(value) {
-  const raw =
-    String(
-      value || "",
-    ).trim();
-
-  const key =
-    raw.toLowerCase();
-
-  if (
-    key.includes(
-      "baby boy",
-    )
-  ) {
-    return "Baby Boy";
-  }
-
-  if (
-    key.includes(
-      "baby girl",
-    )
-  ) {
-    return "Baby Girl";
-  }
-
-  if (
-    key.includes(
-      "infant boy",
-    )
-  ) {
-    return "Infant Boys";
-  }
-
-  if (
-    key.includes(
-      "infant girl",
-    )
-  ) {
-    return "Infant Girls";
-  }
-
-  if (
-    key === "infants" ||
-    key === "infant"
-  ) {
-    return "Infant Boys";
-  }
-
-  if (
-    key.includes(
-      "women",
-    ) ||
-    key.includes(
-      "womens",
-    )
-  ) {
-    return "Womens";
-  }
-
-  if (
-    key === "girls" ||
-    key.includes(
-      " girl",
-    )
-  ) {
-    return "Girls";
-  }
-
-  if (
-    key === "boys" ||
-    key.includes(
-      " boy",
-    ) ||
-    key.includes(
-      "kid",
-    )
-  ) {
-    return "Boys";
-  }
-
-  if (
-    key.includes(
-      "unisex",
-    )
-  ) {
-    return "Unisex";
-  }
-
-  if (
-    key.includes(
-      "men",
-    ) ||
-    key === "male"
-  ) {
-    return "Men";
-  }
-
-  return approvedCategories.includes(
-    raw,
-  )
-    ? raw
-    : "Unisex";
+// Builds the lookup sets once per render, then one predicate serves both the
+// visible list and the Product Type counts. `skip` leaves one group out.
+function buildFilterSets({ categories, brandSel, types, wearStyles, collectionsSel, colors, query }) {
+  const pick = (list) => (list.length ? new Set(list.map(filterKey)) : null);
+  return {
+    category: pick(categories), brand: pick(brandSel), type: pick(types), wear: pick(wearStyles),
+    collection: pick(collectionsSel), color: pick(colors), search: query.trim().toLowerCase(),
+  };
 }
-
-function normalWearStyle(
-  product,
-) {
-  const explicit =
-    String(
-      product?.wearStyle ||
-        "",
-    )
-      .trim()
-      .toLowerCase();
-
-  if (
-    explicit.includes(
-      "street",
-    )
-  ) {
-    return "Street Wear";
-  }
-
-  if (
-    explicit.includes(
-      "casual",
-    )
-  ) {
-    return "Casual Wear";
-  }
-
-  const folder =
-    String(
-      product?.legacySourceFolder ||
-        "",
-    )
-      .trim()
-      .toLowerCase();
-
-  if (
-    [
-      "ardeur",
-      "acid wash",
-      "revisited",
-    ].includes(
-      folder,
-    )
-  ) {
-    return "Street Wear";
-  }
-
-  const source = [
-    product?.productName,
-    product?.description,
-  ]
-    .map((value) =>
-      String(
-        value || "",
-      ).toLowerCase(),
-    )
-    .join(" ");
-
-  if (
-    source.includes(
-      "acid wash",
-    ) ||
-    source.includes(
-      "acid-wash",
-    )
-  ) {
-    return "Street Wear";
-  }
-
-  return "Casual Wear";
-}
-
-function normalType(product) {
-  const raw =
-    String(
-      product?.productType ||
-        product?.collection ||
-        "",
-    ).trim();
-
-  const source = [
-    raw,
-    product?.collection,
-    product?.productName,
-    product?.description,
-  ]
-    .map((value) =>
-      String(
-        value || "",
-      ).toLowerCase(),
-    )
-    .join(" ");
-
-  if (
-    source.includes(
-      "hoodie",
-    ) &&
-    (
-      source.includes(
-        "jogger",
-      ) ||
-      source.includes(
-        "track pant",
-      )
-    ) &&
-    source.includes(
-      "set",
-    )
-  ) {
-    return "Hoodie & Track Pant Set";
-  }
-
-  if (
-    (
-      source.includes(
-        "t-shirt",
-      ) ||
-      source.includes(
-        "tshirt",
-      ) ||
-      source.includes(
-        "tee",
-      )
-    ) &&
-    (
-      source.includes(
-        "jogger",
-      ) ||
-      source.includes(
-        "track pant",
-      )
-    ) &&
-    source.includes(
-      "set",
-    )
-  ) {
-    return "T-Shirt & Track Pant Set";
-  }
-
-  if (
-    source.includes(
-      "co-ord",
-    ) ||
-    source.includes(
-      "coord",
-    )
-  ) {
-    return "Co-ord Set";
-  }
-
-  if (
-    source.includes(
-      "3 piece",
-    )
-  ) {
-    return "3 Piece Set";
-  }
-
-  if (
-    source.includes(
-      "2 piece",
-    ) ||
-    source.includes(
-      "kids-set",
-    ) ||
-    source.includes(
-      "kids set",
-    )
-  ) {
-    return "2 Piece Set";
-  }
-
-  if (
-    source.includes(
-      "full sleeve",
-    ) &&
-    (
-      source.includes(
-        "t-shirt",
-      ) ||
-      source.includes(
-        "tshirt",
-      )
-    )
-  ) {
-    return "Full Sleeve T-Shirt";
-  }
-
-  if (
-    source.includes(
-      "polo",
-    )
-  ) {
-    return "Polo T-Shirt";
-  }
-
-  if (
-    source.includes(
-      "tank",
-    )
-  ) {
-    return "Tank Top";
-  }
-
-  if (
-    source.includes(
-      "zip",
-    ) &&
-    source.includes(
-      "hood",
-    )
-  ) {
-    return "Zipper Hoodie";
-  }
-
-  if (
-    source.includes(
-      "hood",
-    )
-  ) {
-    return "Hoodie";
-  }
-
-  if (
-    source.includes(
-      "sweat",
-    )
-  ) {
-    return "Sweatshirt";
-  }
-
-  if (
-    source.includes(
-      "jacket",
-    )
-  ) {
-    return "Jacket";
-  }
-
-  if (
-    source.includes(
-      "track",
-    )
-  ) {
-    return "Track Pant";
-  }
-
-  if (
-    source.includes(
-      "jog",
-    )
-  ) {
-    return "Jogger";
-  }
-
-  if (
-    source.includes(
-      "jean",
-    ) ||
-    source.includes(
-      "trouser",
-    )
-  ) {
-    return "Trouser";
-  }
-
-  if (
-    source.includes(
-      "cargo",
-    )
-  ) {
-    return "Cargo Pant";
-  }
-
-  if (
-    source.includes(
-      "legging",
-    )
-  ) {
-    return "Legging";
-  }
-
-  if (
-    source.includes(
-      "short",
-    )
-  ) {
-    return "Shorts";
-  }
-
-  if (
-    source.includes(
-      "skirt",
-    )
-  ) {
-    return "Skirt";
-  }
-
-  if (
-    source.includes(
-      "dress",
-    )
-  ) {
-    return "Dress";
-  }
-
-  if (
-    source.includes(
-      "romper",
-    )
-  ) {
-    return "Romper";
-  }
-
-  if (
-    source.includes(
-      "bodysuit",
-    )
-  ) {
-    return "Bodysuit";
-  }
-
-  if (
-    source.includes(
-      "sleepsuit",
-    )
-  ) {
-    return "Sleepsuit";
-  }
-
-  if (
-    source.includes(
-      "dungaree",
-    )
-  ) {
-    return "Dungaree";
-  }
-
-  if (
-    source.includes(
-      "infant",
-    )
-  ) {
-    return "Infant Set";
-  }
-
-  if (
-    source.includes(
-      "baby",
-    )
-  ) {
-    return "Baby Set";
-  }
-
-  if (
-    source.includes(
-      "shirt",
-    ) &&
-    !source.includes(
-      "t-shirt",
-    ) &&
-    !source.includes(
-      "tshirt",
-    )
-  ) {
-    return "Shirt";
-  }
-
-  if (
-    source.includes(
-      "top",
-    )
-  ) {
-    return "Top";
-  }
-
-  if (
-    source.includes(
-      "t-shirt",
-    ) ||
-    source.includes(
-      "tshirt",
-    ) ||
-    source.includes(
-      "tee",
-    )
-  ) {
-    return "T-Shirt";
-  }
-
-  return approvedProductTypes.includes(
-    raw,
-  )
-    ? raw
-    : "T-Shirt";
-}
-
-function normalCollection(
-  product,
-) {
-  const possible = [
-    product?.season,
-    product?.seasonCollection,
-    product?.catalogCollection,
-    product?.displayCollection,
-    product?.collection,
-  ];
-
-  for (
-    const value
-    of possible
-  ) {
-    const clean =
-      String(
-        value || "",
-      ).trim();
-
-    const match =
-      approvedCollections.find(
-        (collection) =>
-          collection.toLowerCase() ===
-          clean.toLowerCase(),
-      );
-
-    if (match) {
-      return match;
-    }
-  }
-
-  return "Core";
-}
-
-function normalColor(product) {
-  const explicit =
-    String(
-      product?.color ||
-        product?.colour ||
-        "",
-    ).trim();
-
-  if (explicit) {
-    const match =
-      approvedColors.find(
-        (color) =>
-          color.value.toLowerCase() ===
-          explicit.toLowerCase(),
-      );
-
-    if (match) {
-      return match.value;
-    }
-  }
-
-  const source = [
-    product?.productName,
-    product?.description,
-    product?.styleCode,
-    product?.collection,
-  ]
-    .map((value) =>
-      String(
-        value || "",
-      ).toLowerCase(),
-    )
-    .join(" ");
-
-  const aliases = [
-    [
-      "Navy Blue",
-      [
-        "navy blue",
-        "navy",
-      ],
-    ],
-    [
-      "Black",
-      [
-        "black",
-      ],
-    ],
-    [
-      "White",
-      [
-        "white",
-        "off white",
-        "off-white",
-        "cream",
-      ],
-    ],
-    [
-      "Blue",
-      [
-        "blue",
-        "teal",
-      ],
-    ],
-    [
-      "Green",
-      [
-        "green",
-        "olive",
-      ],
-    ],
-    [
-      "Grey",
-      [
-        "grey",
-        "gray",
-        "charcoal",
-      ],
-    ],
-    [
-      "Red",
-      [
-        "red",
-        "maroon",
-        "burgundy",
-      ],
-    ],
-    [
-      "Brown",
-      [
-        "brown",
-        "tan",
-        "beige",
-      ],
-    ],
-  ];
-
-  for (
-    const [
-      name,
-      terms,
-    ] of aliases
-  ) {
-    if (
-      terms.some(
-        (term) =>
-          source.includes(
-            term,
-          ),
-      )
-    ) {
-      return name;
-    }
-  }
-
-  return "";
+function matchesFilters(item, f, skip = "") {
+  return (
+    (!f.category || f.category.has(filterKey(item.category))) &&
+    (!f.brand || f.brand.has(filterKey(item.brandValue))) &&
+    (skip === "type" || !f.type || item.productTypes.some((type) => f.type.has(filterKey(type)))) &&
+    (!f.wear || f.wear.has(filterKey(item.wearStyle))) &&
+    (!f.collection || f.collection.has(filterKey(item.collection))) &&
+    (!f.color || f.color.has(filterKey(item.color))) &&
+    (!f.search || item.searchText.includes(f.search))
+  );
 }
 
 /* =========================================================
@@ -847,6 +144,7 @@ function normalColor(product) {
 
 function uploadedItems(
   products,
+  masters,
 ) {
   return products
     .filter(
@@ -878,36 +176,26 @@ function uploadedItems(
           source:
             "catalog",
 
-          brand:
-            product.brand ||
-            "",
+          brandValue: productMasterValue(product, "brands", masters),
+          brand: masters.brands.find((option) => option.value === productMasterValue(product, "brands", masters))?.label || product.brand || "",
 
           label:
-            product.brand ||
-            "ZEAL",
+            masters.brands.find((option) => option.value === product.brand)?.label || product.brand || "ZEAL",
 
           category:
-            normalCategory(
-              product.category,
-            ),
+            normalizeCategory(product, masters),
 
-          productType:
-            normalType(
-              product,
-            ),
+          productTypes:
+            productTypesOf(product, masters),
 
           wearStyle:
-            normalWearStyle(
-              product,
-            ),
+            productMasterValue(product, "wearStyles", masters),
 
           collection:
-            normalCollection(
-              product,
-            ),
+            productMasterValue(product, "collections", masters),
 
           color:
-            normalColor(
+            normalizeColor(
               product,
             ),
 
@@ -942,6 +230,21 @@ function uploadedItems(
         };
       },
     )
+    .map((item) => ({
+      ...item,
+      productType: displayType(item.productTypes),
+      searchText: [
+        item.productTypes.join(" "),
+        item.brand,
+        item.productName,
+        item.productType,
+        item.category,
+        item.product?.styleCode,
+        item.collection,
+        item.wearStyle,
+        item.product?.description,
+      ].map((value) => String(value || "").toLowerCase()).join("\n"),
+    }))
     .sort(
       (a, b) => {
         if (
@@ -1043,14 +346,10 @@ const ProductImage =
         ],
       );
 
-    const [
-      sourceIndex,
-      setSourceIndex,
-    ] = useState(0);
-
-    useEffect(() => {
-      setSourceIndex(0);
-    }, [src]);
+    // Failure count is tied to the src it belongs to, so a new src starts at 0
+    // without resetting state from an effect.
+    const [failed, setFailed] = useState({ src, count: 0 });
+    const sourceIndex = failed.src === src ? failed.count : 0;
 
     if (
       !sources[
@@ -1079,10 +378,10 @@ const ProductImage =
         }
         decoding="async"
         onError={() =>
-          setSourceIndex(
-            (current) =>
-              current + 1,
-          )
+          setFailed((current) => ({
+            src,
+            count: (current.src === src ? current.count : 0) + 1,
+          }))
         }
         className="h-full w-full object-cover"
       />
@@ -1188,7 +487,7 @@ function FilterGroup({
                   );
                 }
               }}
-              className="flex h-9 w-9 items-center justify-center rounded-full bg-[#f5f5f6] text-[#697083] transition hover:bg-[#ececef]"
+              className="zeal-control flex h-9 w-9 items-center justify-center rounded-full bg-[#f5f5f6] text-[#697083] transition hover:bg-[#ececef]"
             >
               <SearchIcon />
             </button>
@@ -1226,7 +525,7 @@ function FilterGroup({
                   "",
                 )
               }
-              className="text-[#999]"
+              className="zeal-text-button text-[#999]"
             >
               ×
             </button>
@@ -1238,13 +537,21 @@ function FilterGroup({
       <div className="mt-5 space-y-4">
 
         {shownOptions.map(
-          (option) => {
+          (option, optionIndex) => {
             const checked =
               selected.includes(
                 option.value,
               );
-
+            const showSection =
+              !filterQuery && option.section &&
+              option.section !== shownOptions[optionIndex - 1]?.section;
             return (
+              <Fragment key={option.value}>
+              {showSection && (
+                <p className="pt-1 text-[11px] font-semibold uppercase tracking-[.08em] text-[#9b9fa7]">
+                  {option.section}
+                </p>
+              )}
               <label
                 key={
                   option.value
@@ -1288,8 +595,8 @@ function FilterGroup({
                   }
                   )
                 </span>
-
               </label>
+              </Fragment>
             );
           },
         )}
@@ -1305,7 +612,7 @@ function FilterGroup({
                     !current,
                 )
               }
-              className="pt-1 text-[14px] font-medium text-[#ff4264] transition hover:text-[#db294c]"
+              className="zeal-text-button pt-1 text-[14px] font-medium text-[#ff4264] transition hover:text-[#db294c]"
             >
               {expanded
                 ? "Show less"
@@ -1331,7 +638,7 @@ function FilterGroup({
    PRODUCT CARD
 ========================================================= */
 
-function ProductCard({
+function ProductCardBase({
   item,
   index,
   active,
@@ -1409,7 +716,7 @@ function ProductCard({
                   -1,
                 )
               }
-              className="absolute left-3 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/95 opacity-0 shadow transition group-hover:opacity-100"
+              className="zeal-control absolute left-3 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/95 opacity-0 shadow transition group-hover:opacity-100"
             >
               <Chevron left />
             </button>
@@ -1425,7 +732,7 @@ function ProductCard({
                   1,
                 )
               }
-              className="absolute right-3 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/95 opacity-0 shadow transition group-hover:opacity-100"
+              className="zeal-control absolute right-3 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/95 opacity-0 shadow transition group-hover:opacity-100"
             >
               <Chevron />
             </button>
@@ -1492,38 +799,20 @@ function ProductCard({
    PAGE
 ========================================================= */
 
+const ProductCard = memo(ProductCardBase);
+
 export default function ProductShopPage() {
-  const [
-    activeBanner,
-    setActiveBanner,
-  ] = useState(0);
-
-  const [
-    products,
-    setProducts,
-  ] = useState([]);
-
-  const [
-    brands,
-    setBrands,
-  ] = useState(
-    defaultBrands,
-  );
-
-  const [
-    catalogueLoading,
-    setCatalogueLoading,
-  ] = useState(true);
+  const [products, setProducts] = useState(() => getCachedCatalogue()?.products || []);
+  const [masters, setMasters] = useState(() => getCachedCatalogue()?.masters || EMPTY_MASTERS);
+  const [catalogueLoading, setCatalogueLoading] = useState(() => !getCachedCatalogue());
 
   const [
     catalogueError,
     setCatalogueError,
   ] = useState("");
 
-  const [
-    query,
-    setQuery,
-  ] = useState("");
+  const [queryInput, setQueryInput] = useState("");
+  const query = useDeferredValue(queryInput);
 
   const [
     categories,
@@ -1564,137 +853,38 @@ export default function ProductShopPage() {
      FIREBASE LOAD
   ======================================================= */
 
-  const refreshCatalogue =
-    useCallback(
-      async ({
-        silent = false,
-      } = {}) => {
-        if (!silent) {
-          setCatalogueLoading(
-            true,
-          );
-        }
-
-        try {
-          const data =
-            await loadCatalogue();
-
-          setProducts(
-            Array.isArray(
-              data?.products,
-            )
-              ? data.products
-              : [],
-          );
-
-          setBrands(
-            Array.isArray(
-              data?.brands,
-            ) &&
-              data.brands.length
-              ? data.brands
-              : defaultBrands,
-          );
-
-          setCatalogueError(
-            "",
-          );
-        } catch (error) {
-          console.error(
-            "Unable to load Firebase catalogue:",
-            error,
-          );
-
-          setCatalogueError(
-            error?.message ||
-              "Unable to load live catalogue.",
-          );
-        } finally {
-          if (!silent) {
-            setCatalogueLoading(
-              false,
-            );
-          }
-        }
-      },
-      [],
-    );
-
-  useEffect(() => {
-    void refreshCatalogue();
-
-    const handleFocus =
-      () => {
-        void refreshCatalogue({
-          silent: true,
-        });
-      };
-
-    const handleVisibility =
-      () => {
-        if (
-          document.visibilityState ===
-          "visible"
-        ) {
-          void refreshCatalogue({
-            silent: true,
-          });
-        }
-      };
-
-    window.addEventListener(
-      "focus",
-      handleFocus,
-    );
-
-    document.addEventListener(
-      "visibilitychange",
-      handleVisibility,
-    );
-
-    return () => {
-      window.removeEventListener(
-        "focus",
-        handleFocus,
-      );
-
-      document.removeEventListener(
-        "visibilitychange",
-        handleVisibility,
-      );
-    };
-  }, [
-    refreshCatalogue,
-  ]);
-
-  /* =======================================================
-     HERO ROTATION
-  ======================================================= */
-
-  useEffect(() => {
-    const id =
-      window.setInterval(
-        () => {
-          if (
-            !document.hidden
-          ) {
-            setActiveBanner(
-              (value) =>
-                (
-                  value + 1
-                ) %
-                heroBanners.length,
-            );
-          }
-        },
-        7000,
-      );
-
-    return () =>
-      window.clearInterval(
-        id,
-      );
+  const refreshCatalogue = useCallback(async ({ maxAge = 0 } = {}) => {
+    try {
+      await loadCatalogue({ maxAge });
+      setCatalogueError("");
+    } catch (error) {
+      setCatalogueError(error?.message || "Unable to load live catalogue.");
+    } finally {
+      setCatalogueLoading(false);
+    }
   }, []);
+
+  useEffect(() => {
+    const applyCatalogue = (data) => {
+      setProducts(data.products);
+      setMasters(data.masters);
+      setCatalogueLoading(false);
+      setCatalogueError("");
+    };
+    const unsubscribe = subscribeCatalogue(applyCatalogue);
+    const cached = getCachedCatalogue();
+    if (cached) applyCatalogue(cached);
+    // Immediate cached render; the network refresh never clears existing products.
+    void refreshCatalogue({ maxAge: 5000 });
+    const handleVisibility = () => {
+      if (document.visibilityState === "visible") void refreshCatalogue({ maxAge: 60000 });
+    };
+    document.addEventListener("visibilitychange", handleVisibility);
+    return () => {
+      unsubscribe();
+      document.removeEventListener("visibilitychange", handleVisibility);
+    };
+  }, [refreshCatalogue]);
 
   /* =======================================================
      FIREBASE PUBLIC PRODUCTS
@@ -1705,177 +895,73 @@ export default function ProductShopPage() {
       () =>
         uploadedItems(
           products,
+          masters,
         ),
       [
         products,
+        masters,
       ],
     );
 
-  const count = (
-    field,
-    value,
-  ) =>
-    all.filter(
-      (item) =>
-        String(
-          item[
-            field
-          ] || "",
-        ).toLowerCase() ===
-        String(
-          value,
-        ).toLowerCase(),
-    ).length;
+  const counts = useMemo(() => {
+    const fields = ["category", "collection", "wearStyle", "brandValue", "color"];
+    const result = Object.fromEntries(fields.map((field) => [field, new Map()]));
+    all.forEach((item) => fields.forEach((field) => {
+      const key = filterKey(item[field]);
+      if (key) result[field].set(key, (result[field].get(key) || 0) + 1);
+    }));
+    return result;
+  }, [all]);
 
-  /* =======================================================
-     FILTER OPTIONS
-  ======================================================= */
+  // Product Type counts follow the other active filters (Men, Boys, brand...),
+  // so a type's count is exactly what selecting it will show.
+  const typeCounts = useMemo(() => {
+    const sets = buildFilterSets({ categories, brandSel, types: [], wearStyles, collectionsSel, colors, query });
+    const result = new Map();
+    all.forEach((item) => {
+      if (!matchesFilters(item, sets, "type")) return;
+      new Set(item.productTypes.map(filterKey)).forEach((key) => result.set(key, (result.get(key) || 0) + 1));
+    });
+    return result;
+  }, [all, categories, brandSel, wearStyles, collectionsSel, colors, query]);
 
-  const categoryOptions =
-    useMemo(
-      () =>
-        approvedCategories.map(
-          (value) => ({
-            value,
-            label:
-              value,
-            count:
-              count(
-                "category",
-                value,
-              ),
-          }),
-        ),
-      [
-        all,
-      ],
-    );
+  const typeOptionList = useMemo(() => {
+    const selectedKeys = new Set(types.map(filterKey));
+    const labels = new Map();
+    all.forEach((item) => item.productTypes.forEach((type) => labels.set(filterKey(type), type)));
+    return [...labels]
+      .map(([key, value]) => ({ value, label: value, section: typeSection(value), count: typeCounts.get(key) || 0 }))
+      .filter((option) => option.count > 0 || selectedKeys.has(filterKey(option.value)))
+      .sort((a, b) => typeRank(a.value) - typeRank(b.value) || a.value.localeCompare(b.value));
+  }, [all, types, typeCounts]);
 
-  const brandOptions =
-    useMemo(() => {
-      const merged = [];
-      const seen =
-        new Set();
+  const masterOptions = useMemo(() => {
+    const fields = { categories: "category", collections: "collection", wearStyles: "wearStyle", brands: "brandValue" };
+    const rest = Object.fromEntries(Object.entries(fields).map(([key, field]) => {
+      const base = key === "categories" ? normalizeCategoryOptions(masters[key]) : masters[key];
+      const configured = base
+        .map((option) => ({ ...option, label: key === "brands" ? option.label.toUpperCase() : option.label, count: counts[field].get(filterKey(option.value)) || 0 }));
+      // Any value present on a published product but missing from the saved
+      // masters still gets a checkbox, so no product is unreachable by filters.
+      const known = new Set(configured.map((option) => filterKey(option.value)));
+      const extras = new Map();
+      all.forEach((item) => {
+        const value = String(item[field] || "").trim();
+        const valueKey = filterKey(value);
+        if (!valueKey || known.has(valueKey) || extras.has(valueKey)) return;
+        const label = key === "brands" ? String(item.brand || value).toUpperCase() : value;
+        extras.set(valueKey, { value, label, count: counts[field].get(valueKey) || 0 });
+      });
+      return [key, [...configured, ...extras.values()]];
+    }));
+    return { ...rest, productTypes: typeOptionList };
+  }, [all, masters, counts, typeOptionList]);
 
-      const addBrand =
-        (value) => {
-          const clean =
-            String(
-              value || "",
-            ).trim();
-
-          if (!clean) {
-            return;
-          }
-
-          const key =
-            clean.toLowerCase();
-
-          if (
-            seen.has(key)
-          ) {
-            return;
-          }
-
-          seen.add(key);
-
-          merged.push(
-            clean,
-          );
-        };
-
-      brands.forEach(
-        addBrand,
-      );
-
-      all.forEach(
-        (item) =>
-          addBrand(
-            item.brand,
-          ),
-      );
-
-      return merged.map(
-        (value) => ({
-          value,
-          label:
-            value.toUpperCase(),
-          count:
-            count(
-              "brand",
-              value,
-            ),
-        }),
-      );
-    }, [
-      all,
-      brands,
-    ]);
-
-  const typeOptions =
-    useMemo(
-      () =>
-        approvedProductTypes.map(
-          (value) => ({
-            value,
-            label:
-              value,
-            count:
-              count(
-                "productType",
-                value,
-              ),
-          }),
-        ),
-      [
-        all,
-      ],
-    );
-
-  const collectionOptions =
-    useMemo(
-      () =>
-        approvedCollections.map(
-          (value) => ({
-            value,
-            label:
-              value,
-            count:
-              count(
-                "collection",
-                value,
-              ),
-          }),
-        ),
-      [
-        all,
-      ],
-    );
-
-  const wearStyleOptions =
-    useMemo(
-      () =>
-        [
-          "Casual Wear",
-          "Street Wear",
-          "Sportswear",
-          "Activewear",
-        ].map(
-          (value) => ({
-            value,
-            label:
-              value,
-            count:
-              count(
-                "wearStyle",
-                value,
-              ),
-          }),
-        ),
-      [
-        all,
-      ],
-    );
+  const categoryOptions = masterOptions.categories;
+  const typeOptions = masterOptions.productTypes;
+  const collectionOptions = masterOptions.collections;
+  const wearStyleOptions = masterOptions.wearStyles;
+  const brandOptions = masterOptions.brands;
 
   const colorOptions =
     useMemo(
@@ -1889,14 +975,11 @@ export default function ProductShopPage() {
             hex:
               color.hex,
             count:
-              count(
-                "color",
-                color.value,
-              ),
+              counts.color.get(filterKey(color.value)) || 0,
           }),
         ),
       [
-        all,
+        counts,
       ],
     );
 
@@ -1904,96 +987,10 @@ export default function ProductShopPage() {
      FILTERING
   ======================================================= */
 
-  const visible =
-    useMemo(() => {
-      const search =
-        query
-          .trim()
-          .toLowerCase();
-
-      return all.filter(
-        (item) => {
-          const categoryOk =
-            !categories.length ||
-            categories.includes(
-              item.category,
-            );
-
-          const brandOk =
-            !brandSel.length ||
-            brandSel.includes(
-              item.brand,
-            );
-
-          const typeOk =
-            !types.length ||
-            types.includes(
-              item.productType,
-            );
-
-          const wearOk =
-            !wearStyles.length ||
-            wearStyles.includes(
-              item.wearStyle,
-            );
-
-          const collectionOk =
-            !collectionsSel.length ||
-            collectionsSel.includes(
-              item.collection,
-            );
-
-          const colorOk =
-            !colors.length ||
-            colors.includes(
-              item.color,
-            );
-
-          const searchOk =
-            !search ||
-            [
-              item.brand,
-              item.productName,
-              item.productType,
-              item.category,
-              item.product
-                ?.styleCode,
-              item.collection,
-              item.wearStyle,
-              item.product
-                ?.description,
-            ].some(
-              (value) =>
-                String(
-                  value || "",
-                )
-                  .toLowerCase()
-                  .includes(
-                    search,
-                  ),
-            );
-
-          return (
-            categoryOk &&
-            brandOk &&
-            typeOk &&
-            wearOk &&
-            collectionOk &&
-            colorOk &&
-            searchOk
-          );
-        },
-      );
-    }, [
-      all,
-      query,
-      categories,
-      brandSel,
-      types,
-      wearStyles,
-      collectionsSel,
-      colors,
-    ]);
+  const visible = useMemo(() => {
+    const sets = buildFilterSets({ categories, brandSel, types, wearStyles, collectionsSel, colors, query });
+    return all.filter((item) => matchesFilters(item, sets));
+  }, [all, query, categories, brandSel, types, wearStyles, collectionsSel, colors]);
 
   const toggle = (
     setter,
@@ -2022,7 +1019,7 @@ export default function ProductShopPage() {
     setWearStyles([]);
     setCollectionsSel([]);
     setColors([]);
-    setQuery("");
+    setQueryInput("");
   };
 
   const filtered =
@@ -2035,55 +1032,46 @@ export default function ProductShopPage() {
     query.trim();
 
   /* =======================================================
+     PROGRESSIVE RENDERING
+     Only a page of cards is mounted at a time; more load as the
+     visitor scrolls. Resets automatically when any filter changes.
+  ======================================================= */
+  const signature = [categories, brandSel, types, wearStyles, collectionsSel, colors]
+    .map((list) => list.join("|"))
+    .join("~") + `~${query.trim().toLowerCase()}`;
+  const [pageState, setPageState] = useState({ signature: "", count: PAGE_SIZE });
+  const shownCount = pageState.signature === signature ? pageState.count : PAGE_SIZE;
+  const hasMore = shownCount < visible.length;
+  const sentinelRef = useRef(null);
+
+  const loadMore = useCallback(() => {
+    setPageState((current) => ({
+      signature,
+      count: (current.signature === signature ? current.count : PAGE_SIZE) + PAGE_SIZE,
+    }));
+  }, [signature]);
+
+  useEffect(() => {
+    const node = sentinelRef.current;
+    if (!hasMore || !node || typeof IntersectionObserver === "undefined") return undefined;
+    const observer = new IntersectionObserver(
+      (entries) => { if (entries.some((entry) => entry.isIntersecting)) loadMore(); },
+      { rootMargin: "900px 0px" },
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [hasMore, shownCount, loadMore]);
+
+  const handleImageChange = useCallback((id, value) => {
+    setActiveImages((current) => ({ ...current, [id]: value }));
+  }, []);
+
+  /* =======================================================
      RENDER
   ======================================================= */
 
   return (
     <main className="min-h-screen bg-white text-[#171717]">
-
-      {/* ===============================================
-          HERO
-      =============================================== */}
-
-      <section className="relative overflow-hidden bg-[#111]">
-
-        <div className="relative w-full h-auto bg-[#111]">
-
-          {heroBanners.map(
-            (
-              banner,
-              index,
-            ) => (
-              <img
-                key={
-                  banner.id
-                }
-                src={bannerImagePath(
-                  banner.file,
-                )}
-                alt={
-                  banner.alt
-                }
-                loading={
-                  index ===
-                  0
-                    ? "eager"
-                    : "lazy"
-                }
-                decoding="async"
-                className={`block w-full h-auto transition-opacity duration-500 ${
-                  index ===
-                  activeBanner
-                    ? "relative opacity-100"
-                    : "absolute inset-0 opacity-0"
-                }`}
-              />
-            ),
-          )}
-
-        </div>
-
-      </section>
 
       {/* ===============================================
           MYNTRA-STYLE PRODUCT AREA
@@ -2121,24 +1109,22 @@ export default function ProductShopPage() {
             />
 
             <FilterGroup
-              title="Brand"
+              title="Product Types"
               options={
-                brandOptions
+                typeOptions
               }
               selected={
-                brandSel
+                types
               }
               onToggle={(
                 value,
               ) =>
                 toggle(
-                  setBrandSel,
+                  setTypes,
                   value,
                 )
               }
-              visibleCount={
-                6
-              }
+              visibleCount={14}
             />
 
             <FilterGroup
@@ -2163,27 +1149,6 @@ export default function ProductShopPage() {
             />
 
             <FilterGroup
-              title="Product Types"
-              options={
-                typeOptions
-              }
-              selected={
-                types
-              }
-              onToggle={(
-                value,
-              ) =>
-                toggle(
-                  setTypes,
-                  value,
-                )
-              }
-              visibleCount={
-                6
-              }
-            />
-
-            <FilterGroup
               title="Wear Style"
               options={
                 wearStyleOptions
@@ -2204,6 +1169,27 @@ export default function ProductShopPage() {
               }
               searchable={
                 false
+              }
+            />
+
+            <FilterGroup
+              title="Brand"
+              options={
+                brandOptions
+              }
+              selected={
+                brandSel
+              }
+              onToggle={(
+                value,
+              ) =>
+                toggle(
+                  setBrandSel,
+                  value,
+                )
+              }
+              visibleCount={
+                6
               }
             />
 
@@ -2279,7 +1265,7 @@ export default function ProductShopPage() {
                       onClick={() =>
                         void refreshCatalogue()
                       }
-                      className="mt-1 text-[11px] font-medium text-[#db3627] underline underline-offset-2"
+                      className="zeal-text-button mt-1 text-[11px] font-medium text-[#db3627] underline underline-offset-2"
                     >
                       Refresh catalogue
                     </button>
@@ -2293,12 +1279,12 @@ export default function ProductShopPage() {
 
                   <input
                     value={
-                      query
+                      queryInput
                     }
                     onChange={(
                       event,
                     ) =>
-                      setQuery(
+                      setQueryInput(
                         event.target
                           .value,
                       )
@@ -2307,15 +1293,15 @@ export default function ProductShopPage() {
                     className="min-w-0 flex-1 bg-transparent text-[13px] outline-none placeholder:text-[#9da1a8]"
                   />
 
-                  {query && (
+                  {queryInput && (
                     <button
                       type="button"
                       onClick={() =>
-                        setQuery(
+                        setQueryInput(
                           "",
                         )
                       }
-                      className="text-lg text-[#8f949d]"
+                      className="zeal-text-button text-lg text-[#8f949d]"
                     >
                       ×
                     </button>
@@ -2343,7 +1329,7 @@ export default function ProductShopPage() {
                   onClick={
                     clear
                   }
-                  className="text-[11px] font-semibold uppercase tracking-[.08em] text-[#db3627]"
+                  className="zeal-text-button text-[11px] font-semibold uppercase tracking-[.08em] text-[#db3627]"
                 >
                   Clear all
                 </button>
@@ -2356,50 +1342,31 @@ export default function ProductShopPage() {
             ========================================= */}
 
             {visible.length ? (
+              <>
               <div className="grid grid-cols-2 gap-x-4 gap-y-9 px-5 py-6 sm:grid-cols-3 sm:px-7 md:grid-cols-4 lg:px-8 xl:grid-cols-5">
 
-                {visible.map(
-                  (
-                    item,
-                    index,
-                  ) => (
-                    <ProductCard
-                      key={
-                        item.id
-                      }
-                      item={
-                        item
-                      }
-                      index={
-                        index
-                      }
-                      active={
-                        activeImages[
-                          item.id
-                        ] ||
-                        0
-                      }
-                      onChange={(
-                        id,
-                        value,
-                      ) =>
-                        setActiveImages(
-                          (
-                            current,
-                          ) => ({
-                            ...current,
-                            [
-                              id
-                            ]:
-                              value,
-                          }),
-                        )
-                      }
-                    />
-                  ),
-                )}
-
+                {visible.slice(0, shownCount).map((item, index) => (
+                  <ProductCard
+                    key={item.id}
+                    item={item}
+                    index={index}
+                    active={activeImages[item.id] || 0}
+                    onChange={handleImageChange}
+                  />
+                ))}
               </div>
+              {hasMore && (
+                <div ref={sentinelRef} className="flex justify-center px-5 pb-12 pt-2">
+                  <button
+                    type="button"
+                    onClick={loadMore}
+                    className="zeal-button border border-black px-6 py-3 text-xs font-semibold uppercase"
+                  >
+                    Load more ({visible.length - shownCount} remaining)
+                  </button>
+                </div>
+              )}
+              </>
             ) : (
               <div className="flex min-h-[420px] items-center justify-center px-6 text-center">
 
@@ -2418,7 +1385,7 @@ export default function ProductShopPage() {
                       onClick={
                         clear
                       }
-                      className="mt-5 border border-black px-5 py-3 text-xs font-semibold uppercase"
+                      className="zeal-button mt-5 border border-black px-5 py-3 text-xs font-semibold uppercase"
                     >
                       Clear Filters
                     </button>

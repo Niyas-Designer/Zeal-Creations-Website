@@ -570,7 +570,7 @@ function CatalogLogin() {
               disabled={
                 submitting
               }
-              className="mt-6 w-full bg-[#171717] px-6 py-4 text-xs font-semibold uppercase tracking-[0.12em] text-white transition hover:bg-[#db3627] disabled:cursor-not-allowed disabled:opacity-60"
+              className="zeal-button mt-6 w-full bg-[#171717] px-6 py-4 text-xs font-semibold uppercase tracking-[0.12em] text-white transition hover:bg-[#db3627] disabled:cursor-not-allowed disabled:opacity-60"
             >
               {submitting
                 ? "Signing In..."
@@ -728,7 +728,7 @@ function CatalogArea({
         disabled={
           signingOut
         }
-        className="fixed right-4 top-4 z-[9999] border border-[#d6d0ca] bg-white px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.1em] text-[#171717] shadow-sm transition hover:bg-[#171717] hover:text-white disabled:cursor-not-allowed disabled:opacity-50 sm:right-6 sm:top-6"
+        className="zeal-button fixed right-4 top-4 z-[9999] border border-[#d6d0ca] bg-white px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.1em] text-[#171717] shadow-sm transition hover:bg-[#171717] hover:text-white disabled:cursor-not-allowed disabled:opacity-50 sm:right-6 sm:top-6"
       >
         {signingOut
           ? "Logging Out..."

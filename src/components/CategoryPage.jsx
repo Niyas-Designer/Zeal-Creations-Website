@@ -57,7 +57,7 @@ function PrimaryCategoryCard({ category, heightClass }) {
 
           <Link
             to="/products"
-            className={`${buttonClass} mt-5`}
+            className={`zeal-button ${buttonClass} mt-5`}
           >
             Explore
           </Link>
@@ -96,7 +96,7 @@ function SupportingCategoryCard({ category }) {
 
           <Link
             to="/products"
-            className={`${buttonClass} mt-6`}
+            className={`zeal-button ${buttonClass} mt-6`}
           >
             Explore
           </Link>

@@ -79,7 +79,7 @@ function Navbar() {
           <Link
             to="/contact-us"
             onClick={handleNavigation}
-            className="inline-flex h-11 items-center justify-center bg-[#1d1d1d] px-5 text-[13px] font-medium tracking-[0.08em] text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#db3627] hover:shadow-[0_12px_24px_rgba(219,54,39,0.16)]"
+            className="zeal-button inline-flex h-11 items-center justify-center bg-[#1d1d1d] px-5 text-[13px] font-medium tracking-[0.08em] text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#db3627] hover:shadow-[0_12px_24px_rgba(219,54,39,0.16)]"
           >
             Work With Us
           </Link>
@@ -90,7 +90,7 @@ function Navbar() {
           <Link
             to="/contact-us"
             onClick={handleNavigation}
-            className="hidden h-10 items-center justify-center border border-stone-300 px-3 text-[11px] font-medium tracking-[0.1em] text-[#1d1d1d] transition-colors duration-200 hover:border-[#db3627] hover:text-[#db3627] sm:inline-flex"
+            className="zeal-button hidden h-10 items-center justify-center border border-stone-300 px-3 text-[11px] font-medium tracking-[0.1em] text-[#1d1d1d] transition-colors duration-200 hover:border-[#db3627] hover:text-[#db3627] sm:inline-flex"
           >
             Work With Us
           </Link>
@@ -105,7 +105,7 @@ function Navbar() {
             aria-expanded={isMenuOpen}
             aria-controls="mobile-navigation"
             onClick={() => setIsMenuOpen((open) => !open)}
-            className={`group relative flex h-11 w-11 items-center justify-center overflow-hidden bg-[#1f1f1f] p-2 text-white transition-all duration-300 hover:bg-[#db3627] ${
+            className={`zeal-control group relative flex h-11 w-11 items-center justify-center overflow-hidden bg-[#1f1f1f] p-2 text-white transition-all duration-300 hover:bg-[#db3627] ${
               isMenuOpen
                 ? 'shadow-[0_14px_28px_rgba(31,31,31,0.22)]'
                 : 'shadow-[0_10px_22px_rgba(31,31,31,0.14)]'
@@ -170,7 +170,7 @@ function Navbar() {
             <Link
               to="/contact-us"
               onClick={handleNavigation}
-              className="mt-4 inline-flex h-11 items-center justify-center bg-[#1d1d1d] px-5 text-sm font-medium tracking-[0.08em] text-white transition-all duration-300 hover:bg-[#db3627]"
+              className="zeal-button mt-4 inline-flex h-11 items-center justify-center bg-[#1d1d1d] px-5 text-sm font-medium tracking-[0.08em] text-white transition-all duration-300 hover:bg-[#db3627]"
             >
               Work With Us
             </Link>

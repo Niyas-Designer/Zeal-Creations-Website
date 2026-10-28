@@ -38,7 +38,7 @@ function NotFoundPage() {
           <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Link
               to="/"
-              className="min-w-[190px] bg-[#171717] px-7 py-4 text-xs font-semibold uppercase tracking-[0.12em] text-white transition duration-200 hover:bg-[#db3627]"
+              className="zeal-button min-w-[190px] bg-[#171717] px-7 py-4 text-xs font-semibold uppercase tracking-[0.12em] text-white transition duration-200 hover:bg-[#db3627]"
             >
               Back to Home
             </Link>

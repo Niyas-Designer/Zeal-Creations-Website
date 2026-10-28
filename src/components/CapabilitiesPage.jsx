@@ -228,13 +228,13 @@ function CapabilitiesPage() {
             <div className="mt-8 flex flex-wrap gap-4">
               <Link
                 to="/contact-us"
-                className="inline-flex items-center justify-center rounded-xl bg-[#111111] px-6 py-3.5 text-sm font-medium tracking-[0.08em] text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#db3627]"
+                className="zeal-button inline-flex items-center justify-center rounded-xl bg-[#111111] px-6 py-3.5 text-sm font-medium tracking-[0.08em] text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#db3627]"
               >
                 Contact Us
               </Link>
               <Link
                 to="/about-us"
-                className="inline-flex items-center justify-center rounded-xl border border-[#d9d4ca] bg-[#f7f4ee] px-6 py-3.5 text-sm font-medium tracking-[0.08em] text-[#111111] transition-all duration-200 hover:-translate-y-0.5 hover:border-[#111111]"
+                className="zeal-button inline-flex items-center justify-center rounded-xl border border-[#d9d4ca] bg-[#f7f4ee] px-6 py-3.5 text-sm font-medium tracking-[0.08em] text-[#111111] transition-all duration-200 hover:-translate-y-0.5 hover:border-[#111111]"
               >
                 About ZEAL
               </Link>

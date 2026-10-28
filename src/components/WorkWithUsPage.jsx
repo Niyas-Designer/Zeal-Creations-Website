@@ -445,7 +445,7 @@ function WorkWithUsPage() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="mt-6 inline-flex min-h-12 items-center justify-center bg-[#1d1d1d] px-7 text-sm font-semibold uppercase tracking-[0.1em] text-white transition hover:-translate-y-0.5 hover:bg-[#db3627] disabled:cursor-not-allowed disabled:opacity-60"
+                className="zeal-button mt-6 inline-flex min-h-12 items-center justify-center bg-[#1d1d1d] px-7 text-sm font-semibold uppercase tracking-[0.1em] text-white transition hover:-translate-y-0.5 hover:bg-[#db3627] disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {isSubmitting ? "Sending..." : "Send Enquiry"}
               </button>

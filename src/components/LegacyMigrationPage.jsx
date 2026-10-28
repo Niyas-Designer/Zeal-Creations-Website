@@ -1287,7 +1287,7 @@ function LegacyMigrationPage() {
 
           <Link
             to="/catalog"
-            className="inline-flex w-fit border border-[#171717] bg-white px-5 py-3 text-xs font-semibold uppercase tracking-[0.12em] transition hover:bg-[#171717] hover:text-white"
+            className="zeal-button inline-flex w-fit border border-[#171717] bg-white px-5 py-3 text-xs font-semibold uppercase tracking-[0.12em] transition hover:bg-[#171717] hover:text-white"
           >
             Back to Catalogue
           </Link>
@@ -1369,7 +1369,7 @@ function LegacyMigrationPage() {
                 onClick={
                   runMigration
                 }
-                className="bg-[#171717] px-6 py-3 text-xs font-semibold uppercase tracking-[0.12em] text-white transition hover:bg-[#db3627] disabled:cursor-not-allowed disabled:opacity-40"
+                className="zeal-button bg-[#171717] px-6 py-3 text-xs font-semibold uppercase tracking-[0.12em] text-white transition hover:bg-[#db3627] disabled:cursor-not-allowed disabled:opacity-40"
               >
                 {migratedCount >
                 0
@@ -1385,7 +1385,7 @@ function LegacyMigrationPage() {
                 onClick={
                   stopMigration
                 }
-                className="border border-[#171717] bg-white px-6 py-3 text-xs font-semibold uppercase tracking-[0.12em] transition hover:bg-[#171717] hover:text-white disabled:cursor-not-allowed disabled:opacity-30"
+                className="zeal-button border border-[#171717] bg-white px-6 py-3 text-xs font-semibold uppercase tracking-[0.12em] transition hover:bg-[#171717] hover:text-white disabled:cursor-not-allowed disabled:opacity-30"
               >
                 Stop Safely
               </button>
@@ -1398,7 +1398,7 @@ function LegacyMigrationPage() {
                 onClick={() =>
                   void loadMigrationState()
                 }
-                className="border border-[#d4cec8] bg-white px-6 py-3 text-xs font-semibold uppercase tracking-[0.12em] text-[#514c46] transition hover:border-[#171717]"
+                className="zeal-button border border-[#d4cec8] bg-white px-6 py-3 text-xs font-semibold uppercase tracking-[0.12em] text-[#514c46] transition hover:border-[#171717]"
               >
                 Refresh
               </button>

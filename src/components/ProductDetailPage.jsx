@@ -251,7 +251,7 @@ function ProductDetailPage() {
             <button
               type="button"
               onClick={goBackToProducts}
-              className="mt-8 inline-flex bg-[#171717] px-7 py-4 text-xs font-semibold uppercase tracking-[0.12em] text-white transition-colors duration-150 hover:bg-[#db3627]"
+              className="zeal-button mt-8 inline-flex bg-[#171717] px-7 py-4 text-xs font-semibold uppercase tracking-[0.12em] text-white transition-colors duration-150 hover:bg-[#db3627]"
             >
               Back to Products
             </button>
@@ -269,7 +269,7 @@ function ProductDetailPage() {
             <button
               type="button"
               onClick={goBackToProducts}
-              className="transition-colors duration-150 hover:text-[#db3627]"
+              className="zeal-text-button transition-colors duration-150 hover:text-[#db3627]"
             >
               Products
             </button>
@@ -382,7 +382,7 @@ function ProductDetailPage() {
                         href={platform.url}
                         target="_blank"
                         rel="noreferrer"
-                        className="flex min-h-12 items-center justify-center border border-[#171717] px-4 py-3 text-[10px] font-semibold uppercase tracking-[0.1em] transition-colors duration-150 hover:bg-[#171717] hover:text-white"
+                        className="zeal-button flex min-h-12 items-center justify-center border border-[#171717] px-4 py-3 text-[10px] font-semibold uppercase tracking-[0.1em] transition-colors duration-150 hover:bg-[#171717] hover:text-white"
                       >
                         {platform.name}
                       </a>
@@ -398,7 +398,7 @@ function ProductDetailPage() {
               <button
                 type="button"
                 disabled
-                className="mt-6 w-full cursor-not-allowed bg-[#ece9e5] px-6 py-4 text-xs font-semibold uppercase tracking-[0.08em] text-[#98918a]"
+                className="zeal-button mt-6 w-full cursor-not-allowed bg-[#ece9e5] px-6 py-4 text-xs font-semibold uppercase tracking-[0.08em] text-[#98918a]"
               >
                 Direct Purchase Currently Unavailable
               </button>
@@ -407,7 +407,7 @@ function ProductDetailPage() {
                 <button
                   type="button"
                   onClick={goBackToProducts}
-                  className="inline-flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.12em] transition-colors duration-150 hover:text-[#db3627]"
+                  className="zeal-text-button inline-flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.12em] transition-colors duration-150 hover:text-[#db3627]"
                 >
                   <span>←</span>
                   Back to Products
@@ -434,7 +434,7 @@ function ProductDetailPage() {
               <button
                 type="button"
                 onClick={() => navigate("/products")}
-                className="hidden text-xs font-semibold uppercase tracking-[0.12em] transition-colors duration-150 hover:text-[#db3627] sm:block"
+                className="zeal-text-button hidden text-xs font-semibold uppercase tracking-[0.12em] transition-colors duration-150 hover:text-[#db3627] sm:block"
               >
                 View All
               </button>

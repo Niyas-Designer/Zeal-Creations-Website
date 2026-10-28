@@ -67,7 +67,7 @@ function WhyZealPage() {
                         onMouseLeave={hideDivision}
                         onFocus={() => showDivision(index)}
                         onBlur={hideDivision}
-                        className="w-fit cursor-default bg-transparent p-0 text-left text-[clamp(2.2rem,4.4vw,4rem)] font-medium leading-[1] tracking-[-0.06em] text-[#111111] outline-none transition-opacity duration-300 focus-visible:text-[#db3627]"
+                        className="zeal-text-button w-fit cursor-default bg-transparent p-0 text-left text-[clamp(2.2rem,4.4vw,4rem)] font-medium leading-[1] tracking-[-0.06em] text-[#111111] outline-none transition-opacity duration-300 focus-visible:text-[#db3627]"
                         aria-label={`Preview ${division.title}`}
                       >
                         {division.title}

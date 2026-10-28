@@ -273,7 +273,7 @@ function SiteFooter() {
                   target="_blank"
                   rel="noreferrer"
                   aria-label={item.label}
-                  className="text-white/76 transition duration-300 ease-out hover:scale-110 hover:text-[#e53935]"
+                  className="zeal-control text-white/76 transition duration-300 ease-out hover:scale-110 hover:text-[#e53935]"
                 >
                   {item.icon}
                 </a>

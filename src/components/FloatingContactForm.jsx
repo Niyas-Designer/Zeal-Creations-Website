@@ -27,7 +27,7 @@ function FloatingContactForm() {
         target="_blank"
         rel="noreferrer"
         aria-label="Chat with ZEAL Creations on WhatsApp"
-        className="pointer-events-auto inline-flex h-14 w-14 animate-[contact-float_4.2s_ease-in-out_infinite] items-center justify-center rounded-full bg-[#ff0c00] text-white shadow-[0_18px_42px_rgba(15,23,42,0.25)] transition duration-300 ease-out hover:-translate-y-1 hover:bg-[#1fbd5a] hover:shadow-[0_24px_54px_rgba(37,211,102,0.28)] focus:outline-none focus-visible:ring-4 focus-visible:ring-[#25D366]/30 sm:h-auto sm:w-auto sm:gap-3 sm:px-5 sm:py-3.5"
+        className="zeal-button pointer-events-auto inline-flex h-14 w-14 animate-[contact-float_4.2s_ease-in-out_infinite] items-center justify-center rounded-full bg-[#ff0c00] text-white shadow-[0_18px_42px_rgba(15,23,42,0.25)] transition duration-300 ease-out hover:-translate-y-1 hover:bg-[#1fbd5a] hover:shadow-[0_24px_54px_rgba(37,211,102,0.28)] focus:outline-none focus-visible:ring-4 focus-visible:ring-[#25D366]/30 sm:h-auto sm:w-auto sm:gap-3 sm:px-5 sm:py-3.5"
       >
         {/* <span className="hidden text-sm font-semibold uppercase tracking-[0.12em] sm:inline">
           WhatsApp Us

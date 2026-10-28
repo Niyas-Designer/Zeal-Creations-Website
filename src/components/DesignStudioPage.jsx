@@ -196,7 +196,7 @@ function DesignStudioPage() {
             <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <a
                 href="#studio-process"
-                className="inline-flex h-12 items-center justify-center gap-3 bg-[#171717] px-7 text-sm font-semibold tracking-[0.06em] text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#db3627]"
+                className="zeal-button inline-flex h-12 items-center justify-center gap-3 bg-[#171717] px-7 text-sm font-semibold tracking-[0.06em] text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#db3627]"
               >
                 Explore Our Process
                 <ArrowIcon />
@@ -204,7 +204,7 @@ function DesignStudioPage() {
 
               <Link
                 to="/contact-us"
-                className="inline-flex h-12 items-center justify-center border border-[#cfc9c2] bg-white px-7 text-sm font-semibold tracking-[0.06em] text-[#171717] transition-colors duration-300 hover:border-[#171717]"
+                className="zeal-button inline-flex h-12 items-center justify-center border border-[#cfc9c2] bg-white px-7 text-sm font-semibold tracking-[0.06em] text-[#171717] transition-colors duration-300 hover:border-[#171717]"
               >
                 Start a Conversation
               </Link>
@@ -476,7 +476,7 @@ function DesignStudioPage() {
 
           <Link
             to="/contact-us"
-            className="mt-8 inline-flex h-12 shrink-0 items-center justify-center gap-3 bg-white px-7 text-sm font-semibold tracking-[0.06em] text-[#171717] transition-transform duration-300 hover:-translate-y-0.5 lg:mt-0"
+            className="zeal-button mt-8 inline-flex h-12 shrink-0 items-center justify-center gap-3 bg-white px-7 text-sm font-semibold tracking-[0.06em] text-[#171717] transition-transform duration-300 hover:-translate-y-0.5 lg:mt-0"
           >
             Work With Our Studio
             <ArrowIcon />

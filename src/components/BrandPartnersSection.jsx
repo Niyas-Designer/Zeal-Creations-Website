@@ -329,7 +329,7 @@ function BrandsPage() {
             <a
               key={brand.id}
               href={`#${brand.id}`}
-              className="shrink-0 border border-[#ead8d8] bg-white px-4 py-2 text-[0.68rem] font-semibold uppercase tracking-[0.12em] text-[#171717] transition-colors duration-200 hover:border-[#db3627] hover:bg-[#db3627] hover:text-white"
+              className="zeal-button shrink-0 border border-[#ead8d8] bg-white px-4 py-2 text-[0.68rem] font-semibold uppercase tracking-[0.12em] text-[#171717] transition-colors duration-200 hover:border-[#db3627] hover:bg-[#db3627] hover:text-white"
             >
               {brand.name}
             </a>
@@ -377,13 +377,13 @@ function BrandsPage() {
           <div className="flex flex-col gap-3 sm:flex-row lg:flex-col">
             <Link
               to="/products"
-              className="inline-flex min-h-12 items-center justify-center bg-[#db3627] px-6 text-sm font-semibold uppercase tracking-[0.12em] text-white transition-transform duration-300 hover:-translate-y-0.5"
+              className="zeal-button inline-flex min-h-12 items-center justify-center bg-[#db3627] px-6 text-sm font-semibold uppercase tracking-[0.12em] text-white transition-transform duration-300 hover:-translate-y-0.5"
             >
               Explore Products
             </Link>
             <Link
               to="/contact-us"
-              className="inline-flex min-h-12 items-center justify-center border border-white/25 px-6 text-sm font-semibold uppercase tracking-[0.12em] text-white transition-colors duration-300 hover:border-white hover:bg-white hover:text-black"
+              className="zeal-button inline-flex min-h-12 items-center justify-center border border-white/25 px-6 text-sm font-semibold uppercase tracking-[0.12em] text-white transition-colors duration-300 hover:border-white hover:bg-white hover:text-black"
             >
               Work With ZEAL
             </Link>

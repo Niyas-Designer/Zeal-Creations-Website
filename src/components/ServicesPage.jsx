@@ -95,14 +95,14 @@ function ServicesPage() {
               <div className="mt-10 flex flex-col gap-3 sm:flex-row">
                 <Link
                   to="/contact-us"
-                  className="inline-flex h-12 items-center justify-center bg-[#1d1d1d] px-7 text-sm font-semibold tracking-[0.08em] text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#db3627]"
+                  className="zeal-button inline-flex h-12 items-center justify-center bg-[#1d1d1d] px-7 text-sm font-semibold tracking-[0.08em] text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#db3627]"
                 >
                   Work With Us
                 </Link>
 
                 <Link
                   to="/about-us"
-                  className="inline-flex h-12 items-center justify-center border border-[#d5d0c9] bg-white px-7 text-sm font-semibold tracking-[0.08em] text-[#171717] transition-colors duration-300 hover:border-[#171717]"
+                  className="zeal-button inline-flex h-12 items-center justify-center border border-[#d5d0c9] bg-white px-7 text-sm font-semibold tracking-[0.08em] text-[#171717] transition-colors duration-300 hover:border-[#171717]"
                 >
                   Explore Company
                 </Link>
@@ -249,7 +249,7 @@ function ServicesPage() {
 
           <Link
             to="/contact-us"
-            className="mt-8 inline-flex h-12 items-center justify-center bg-white px-7 text-sm font-semibold tracking-[0.08em] text-[#171717] transition-transform duration-300 hover:-translate-y-0.5 lg:mt-0"
+            className="zeal-button mt-8 inline-flex h-12 items-center justify-center bg-white px-7 text-sm font-semibold tracking-[0.08em] text-[#171717] transition-transform duration-300 hover:-translate-y-0.5 lg:mt-0"
           >
             Contact Our Team
           </Link>

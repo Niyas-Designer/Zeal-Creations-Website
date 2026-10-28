@@ -525,13 +525,13 @@ function AboutZealPage() {
             <div className="mt-8 flex flex-wrap gap-4">
               <Link
                 to="/contact-us"
-                className="inline-flex items-center justify-center rounded-xl bg-white px-6 py-3.5 text-sm font-medium tracking-[0.08em] text-[#111111] transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#f1f1eb]"
+                className="zeal-button inline-flex items-center justify-center rounded-xl bg-white px-6 py-3.5 text-sm font-medium tracking-[0.08em] text-[#111111] transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#f1f1eb]"
               >
                 Contact Us
               </Link>
               <Link
                 to="/our-brand"
-                className="inline-flex items-center justify-center rounded-xl border border-white/18 bg-white/6 px-6 py-3.5 text-sm font-medium tracking-[0.08em] text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/10"
+                className="zeal-button inline-flex items-center justify-center rounded-xl border border-white/18 bg-white/6 px-6 py-3.5 text-sm font-medium tracking-[0.08em] text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/10"
               >
                 Explore Our Brands
               </Link>
